@@ -67,14 +67,14 @@ public class PhaistosDiscCipher {
 
         for (k = 1; k <= n; k++) {
             for (i = 0, j = k - 1; i <= k - 1 && j >= 0; i++, j--, index++) {
-                char m = (char) ((cipherText.charAt(index) - 'A' - intermediateKey + 26) % 26 + 'A');
-                plainText[i * n + j] = m;
+                char m = (char) ((cipherText.charAt(i * n + j) - 'A' - intermediateKey + 26) % 26 + 'A');
+		plainText[index] = m;
             }
         }
         for (k = n - 1; k >= 1; k--) {
             for (i = n - k, j = n - 1; i <= n - 1 && j >= n - k; i++, j--, index++) {
-                char m = (char) ((cipherText.charAt(index) - 'A' - intermediateKey + 26) % 26 + 'A');
-                plainText[i * n + j] = m;
+                char m = (char) ((cipherText.charAt(i * n + j) - 'A' - intermediateKey + 26) % 26 + 'A');
+		plainText[index] = m;
             }
         }
         return new String(plainText);
