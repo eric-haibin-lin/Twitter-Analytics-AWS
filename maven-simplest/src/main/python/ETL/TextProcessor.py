@@ -3,12 +3,16 @@
 @author: Hechao Li
 '''
 import re
+import time
+import calendar
 
 class TextProcessor:
     # key: banned word; Value: asterisks 
     banned_words = {}
     sentiment_dict = {}
-    
+    TIME_FORMAT_FROM = "%a %b %d %X +0000 %Y"
+    TIME_FORMAT_TO = "%Y-%m-%d+%X"
+
     def ROT13(self,text):
         result = ''
         for c in text:
@@ -38,6 +42,14 @@ class TextProcessor:
                 text = re.sub(r'\b' + word + r'\b', censored_word, text)
         return text
     
+
+    # Parse time and get its string & int representation since Epoch 
+    def ConvertTime(self, text):
+        timeStruct = time.strptime(text, self.TIME_FORMAT_FROM)
+        timeString = time.strftime(self.TIME_FORMAT_TO, timeStruct)
+        timeInt = calendar.timegm(timeStruct)
+        return timeString, timeInt
+
     # Load file banned.txt and afinn.txt
     def __init__(self):
         with open('banned.txt') as f:
