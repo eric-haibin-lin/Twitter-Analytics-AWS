@@ -5,7 +5,8 @@
 import re
 
 class TextProcessor:
-    banned_words = []
+    # key: banned word; Value: asterisks 
+    banned_words = {}
     sentiment_dict = {}
     
     def ROT13(self,text):
@@ -30,9 +31,10 @@ class TextProcessor:
     def TextCensoring(self, text):
         words = re.findall(r'\w+', text)
         for word in words:
-            if word.lower() in self.banned_words:
+            lower_word = word.lower()
+            if lower_word in self.banned_words:
                 # Do not check if len < 2 because we trust banned.txt file
-                censored_word = word[0]+('*'*(len(word)-2))+word[-1]
+                censored_word = word[0] + self.banned_words[lower_word] + word[-1]
                 text = re.sub(r'\b' + word + r'\b', censored_word, text)
         return text
     
@@ -40,7 +42,9 @@ class TextProcessor:
     def __init__(self):
         with open('banned.txt') as f:
             for line in f:
-                self.banned_words.append(self.ROT13(line.rstrip()))
+                banned_word = self.ROT13(line.rstrip())
+                censored_word = '*' * (len(banned_word)-2)
+                self.banned_words[banned_word] = censored_word
         with open('afinn.txt') as f:
             for line in f:
                 word, score = line.rstrip('\n').split('\t')
