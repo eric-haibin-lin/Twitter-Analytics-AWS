@@ -2,13 +2,19 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class TextProcessor {
 	private static HashMap<String, String> bannedWordsMap = new HashMap<String, String>();
 	private static HashMap<String, Integer> sentimentScoresMap = new HashMap<String, Integer>();
 	private static boolean bInitialized = false;
-
+	private static String patternFrom = "EEE MMM dd HH:mm:ss +0000 yyyy";
+	private static String patternTo = "yyyy-MM-dd+HH:mm:ss";
+	private SimpleDateFormat formatterFrom;
+	private SimpleDateFormat formatterTo;
 	private void Init() {
 		String line = null;
 		try {
@@ -43,6 +49,9 @@ public class TextProcessor {
 			 * for (String key: sentimentScoresMap.keySet()) {
 			 * System.out.println(key+": " + sentimentScoresMap.get(key)); }
 			 */
+			/* Init time parser */
+			formatterFrom = new SimpleDateFormat(patternFrom);
+			formatterTo = new SimpleDateFormat(patternTo);
 		} catch (FileNotFoundException ex) {
 			System.out.println("File 'banned.txt' Not Found!");
 		} catch (IOException ex) {
@@ -94,5 +103,24 @@ public class TextProcessor {
 			}
 		}
 		return cencoredText;
+	}
+	
+	//Sample input = "Thu May 15 09:02:20 +0000 2014"
+	public Date parseTime(String timeText){
+	    Date date = null;
+		try {
+			date = formatterFrom.parse(timeText);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    return date;
+	}
+	
+	public long getEpoch(Date date){
+		return date.getTime() / 1000;
+	}
+	
+	public String getFormattedTime(Date time){
+	    return formatterTo.format(time);
 	}
 }
