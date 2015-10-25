@@ -70,16 +70,18 @@ class TextProcessor:
 
 DELIMITER = "@15619@delimiter@".encode('utf-8')
 NEWLINE = "@15619@newline@\n".encode('utf-8')
+TIME_FILETER = 1397952000       #Epoch time for Sun, 20 Apr 2014 00:00:00
 
 textProcessor = TextProcessor()
 for line in sys.stdin:
     try:
         tweet = json.loads(line)
-        text = tweet['text']
-        id = tweet['id_str']
         timeString, timeInt = textProcessor.ConvertTime(tweet['created_at'])
-        sentiment = textProcessor.SentimentScore(text)
-        text = textProcessor.TextCensoring(text)
-        print(id, timeString, timeInt, sentiment, text.encode('utf-8'), sep=DELIMITER, end=NEWLINE)
+        if (timeInt >= TIME_FILETER):
+            text = tweet['text']
+            id = tweet['id_str']
+            sentiment = textProcessor.SentimentScore(text)
+            text = textProcessor.TextCensoring(text)
+            print(id, timeString, timeInt, sentiment, text.encode('utf-8'), sep=DELIMITER, end=NEWLINE)
     except Exception, e:
         pass

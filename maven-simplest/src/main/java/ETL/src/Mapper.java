@@ -20,11 +20,8 @@ public class Mapper {
 		try{
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 	        //While we have input on stdin
-			
-			int count = 0;
-			while((line = bufferedReader.readLine()) != null && count < 10){
+			while((line = bufferedReader.readLine()) != null){
 				try{
-					count++;
 					JSONObject result = new JSONObject();
 					JSONObject jsonObj = new JSONObject(line);
 				    Date date = formatterFrom.parse(jsonObj.getString("created_at"));
@@ -33,12 +30,12 @@ public class Mapper {
 				    	String text = jsonObj.getString("text");
 				    	String uid = jsonObj.getJSONObject("user").getString("id_str");
 				    	String tid = jsonObj.getString("id_str");
-						result.put("score", textProcessor.SentimentScore(text));
+						result.put("score", String.valueOf(textProcessor.SentimentScore(text)));
 						result.put("text", textProcessor.TextCensor(text));
 						result.put("uid", uid);
 						result.put("tid", tid);
 						result.put("time", formatterTo.format(date));
-						result.put("epoch", epoch);
+						result.put("epoch", String.valueOf(epoch));
 						System.out.println(result.toString());
 				    }
 				} catch(Exception err){
