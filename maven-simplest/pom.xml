@@ -14,12 +14,32 @@
     <exec.mainClass>io.vertx.example.HelloWorldEmbedded</exec.mainClass>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>in-project</id>
+      <name>In Project Repo</name>
+      <url>file://${project.basedir}/lib</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>json</groupId>
+      <artifactId>json</artifactId>
+      <version>20140107</version>
+    </dependency>
+    <dependency>
+      <groupId>jdbc</groupId>
+      <artifactId>mysqlconnector</artifactId>
+      <version>5.1.37</version>
+    </dependency>
+
   </dependencies>
 
   <build>
