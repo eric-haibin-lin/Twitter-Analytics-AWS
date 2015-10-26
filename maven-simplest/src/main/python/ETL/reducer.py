@@ -5,7 +5,7 @@ import os
 import happybase
 import json
 
-TABLE_NAME = "tweets"
+TABLE_NAME = "tweets_20"
 DELIMITER = "<15619_delimiter>"
 NEWLINE = "<15619_newline>\n"
 DNS = "ec2-52-91-89-121.compute-1.amazonaws.com"
@@ -33,11 +33,11 @@ def main():
 				epoch = tweet['epoch'].encode('utf-8')
 				text = tweet['text'].encode('utf-8')
 				tweet_batch.put(
-					tweet['tid'], 
+					tweet['uid'],
 					{
 						'info:score': score,
 						'info:text': text,
-						'info:uid': uid,
+						'info:tid': tid,
 						'info:timestamp': time, 
 						'info:epoch': epoch,
 					})
