@@ -81,7 +81,7 @@ public class TextProcessor {
 
 	public int SentimentScore(String text) {
 		int score = 0;
-		String[] words = text.split("[^\\w]+");
+		String[] words = text.split("[^a-zA-Z0-9]+");
 		for (int i = 0; i < words.length; i++) {
 			String word = words[i].toLowerCase();
 			if (sentimentScoresMap.containsKey(word)) {
@@ -93,12 +93,13 @@ public class TextProcessor {
 
 	public String TextCensor(String text) {
 		String cencoredText = text;
-		String[] words = text.split("[^\\w]+");
+		String[] words = text.split("[^a-zA-Z0-9]+");
 		for (int i = 0; i < words.length; i++) {
 			String word = words[i].toLowerCase();
 			if (bannedWordsMap.containsKey(word)) {
 				String cencoredWord = words[i].charAt(0) + bannedWordsMap.get(word)
 						+ words[i].charAt(word.length() - 1);
+				//TODO handle b_a55_1
 				cencoredText = cencoredText.replaceAll("\\b" + words[i] + "\\b", cencoredWord);
 			}
 		}
