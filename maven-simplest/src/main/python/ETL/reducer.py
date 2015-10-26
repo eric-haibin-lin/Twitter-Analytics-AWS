@@ -5,9 +5,9 @@ import os
 import happybase
 import json
 
-TABLE_NAME = "tweets_20"
+TABLE_NAME = "tweets_22"
 DELIMITER = "<15619_delimiter>"
-NEWLINE = "<15619_newline>\n"
+NEWLINE = "<15619_newline>"
 DNS = "ec2-52-91-89-121.compute-1.amazonaws.com"
 connection = happybase.Connection(DNS)
 
@@ -43,5 +43,6 @@ def main():
 					})
 				print(tid, uid, score, time, epoch, text, sep=DELIMITER, end=NEWLINE)
 			except Exception, e:
-			pass
+				pass
 
+main()
