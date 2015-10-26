@@ -25,8 +25,8 @@ public class HelloWorldEmbedded {
         e.printStackTrace();
     }
         
-    //String url = "jdbc:mysql://ec2-54-173-14-165.compute-1.amazonaws.com:3306/mysql";
-    String url = "jdbc:mysql://localhost:3306/tweet";
+    String url = "jdbc:mysql://ec2-54-173-14-165.compute-1.amazonaws.com:3306/tweet";
+    //String url = "jdbc:mysql://localhost:3306/tweet";
     String userName = "root";
     String passWord = "coding15619";
         
@@ -45,24 +45,25 @@ public class HelloWorldEmbedded {
 
         if ( userId == null || tweetTime == null || userId.isEmpty() || tweetTime.isEmpty()) {
             resString = "Parameters invalid!";
-        }
+        } else {
+            tweetTime = tweetTime.replace(" ", "+");
+            try {
+                Statement sql_statement = (Statement) con.createStatement();
+                System.out.println(tweetTime);
+                String query = "SELECT tid, score, text FROM tweet WHERE uid = '" + userId + "' AND timestamp = '" + tweetTime + "'";
+                ResultSet result = sql_statement.executeQuery(query);
 
-        try {
-            Statement sql_statement = (Statement) con.createStatement();
-            System.out.println(tweetTime);
-            String query = "SELECT tid, score, text FROM tweet WHERE uid = '" + userId + "' AND timestamp = '" + tweetTime + "'";
-            ResultSet result = sql_statement.executeQuery(query);
-
-            while (result.next()) {
-                String uid = result.getString("tid");
-                String score = result.getString("score");
-                String text = result.getString("text");
-                System.out.println(uid + score + text);
-                
-                resString += uid + "," + score + "," + text + "\n";
+                while (result.next()) {
+                    String uid = result.getString("tid");
+                    String score = result.getString("score");
+                    String text = result.getString("text");
+                    System.out.println(uid + score + text);
+                    
+                    resString += uid + ":" + score + ":" + text + "\n";
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         req.response().end(resString);
     }).listen(80);
