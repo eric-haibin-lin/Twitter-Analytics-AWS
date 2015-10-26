@@ -36,11 +36,12 @@ def main():
 				tweet_batch.put(
 					uid + time + tid,
 					{
-						'info:score': score,
-						'info:text': text,
-						'info:tid': tid,
-						'info:timestamp': time, 
-						'info:epoch': epoch,
+						'info:score': 		score,
+						'info:text': 		text,
+						'info:uid' : 		uid,
+						'info:tid': 		tid,
+						'info:timestamp': 	time, 
+						'info:epoch': 		epoch,
 					})
 				print(tid, uid, score, time, epoch, text, sep=DELIMITER, end=NEWLINE)
 			except Exception, e:
