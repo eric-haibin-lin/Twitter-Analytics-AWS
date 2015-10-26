@@ -18,7 +18,6 @@ public class HelloWorldEmbedded {
   public static void main(String[] args) {
 
 
-    /********************mysql test start****************/
     try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
     } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -26,45 +25,46 @@ public class HelloWorldEmbedded {
         e.printStackTrace();
     }
         
-    String url = "jdbc:mysql://localhost:3306/mysql";
+    //String url = "jdbc:mysql://ec2-54-173-14-165.compute-1.amazonaws.com:3306/mysql";
+    String url = "jdbc:mysql://localhost:3306/tweet";
     String userName = "root";
     String passWord = "coding15619";
         
-    Connection con = null;
+    Connection conn = null;
     try {
-        con = DriverManager.getConnection(url, userName, passWord);
+        conn = DriverManager.getConnection(url, userName, passWord);
     } catch (SQLException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
     }
-    try {
-        Statement sql_statement = (Statement) con.createStatement();
-        String query = "select * from user";
-        ResultSet result = sql_statement.executeQuery(query);
-        while (result.next()) {
-            String res = result.getString("Host");
-            System.out.println(res);
-        }
-    } catch (SQLException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
-    /*********************mysql test end*****************/
+    final Connection con = conn;
 
-
-    // Create an HTTP server which simply returns "Hello World!" to each request.
-    PhaistosDiscCipher pdc = new PhaistosDiscCipher("8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773");
-    String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     Vertx.vertx().createHttpServer().requestHandler(req -> {
-        String publicKeyY = req.params().get("key");
-        String messageM = req.params().get("message");
-	String result = "";
-        if (messageM == null || publicKeyY == null || messageM.isEmpty() || publicKeyY.isEmpty()) {
-	    result = "Parameters invalid!";
-	} else {
-            result = pdc.decrypt(messageM, publicKeyY);
-	}
-        req.response().end("Coding Squirrels,9327-7717-4260\n" + now + "\n" + result + "\n");
+        String userId = req.params().get("userid");
+        String tweetTime = req.params().get("tweet_time");
+        String resString = "Coding Squirrels,9327-7717-4260\n";
+
+        if ( userId == null || tweetTime == null || userId.isEmpty() || tweetTime.isEmpty()) {
+            resString = "Parameters invalid!";
+        }
+
+        try {
+            Statement sql_statement = (Statement) con.createStatement();
+            System.out.println(tweetTime);
+            String query = "SELECT tid, score, text FROM tweet WHERE uid = '" + userId + "' AND timestamp = '" + tweetTime + "'";
+            ResultSet result = sql_statement.executeQuery(query);
+
+            while (result.next()) {
+                String uid = result.getString("tid");
+                String score = result.getString("score");
+                String text = result.getString("text");
+                System.out.println(uid + score + text);
+                
+                resString += uid + "," + score + "," + text + "\n";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        req.response().end(resString);
     }).listen(80);
   }
 

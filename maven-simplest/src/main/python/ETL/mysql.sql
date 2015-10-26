@@ -1,4 +1,6 @@
-create database tweet;
+CREATE DATABASE IF NOT EXISTS tweet;
+
+USE tweet;
 
 CREATE TABLE IF NOT EXISTS `tweet` (
   `tid` varchar(32) NOT NULL,
@@ -14,6 +16,6 @@ CREATE INDEX uid_index ON tweet (uid);
 CREATE INDEX time_index ON tweet (timestamp);
 
 
-LOAD DATA LOCAL INFILE "/path-to-file/part-x" REPLACE INTO TABLE `tweet`
+LOAD DATA LOCAL INFILE "../../../../../../part-00000" REPLACE INTO TABLE `tweet`
 FIELDS TERMINATED BY '<15619_delimiter>'
 LINES TERMINATED BY '<15619_newline>';
