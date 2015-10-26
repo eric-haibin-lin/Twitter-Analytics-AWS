@@ -5,10 +5,11 @@ import os
 import happybase
 import json
 
-TABLE_NAME = "tweets_22"
+TABLE_NAME = "tweets"
 DELIMITER = "<15619_delimiter>"
 NEWLINE = "<15619_newline>"
-DNS = "ec2-52-91-89-121.compute-1.amazonaws.com"
+#Remember to modify the DNS address of HBase master
+DNS = "ec2-54-165-248-154.compute-1.amazonaws.com"
 connection = happybase.Connection(DNS)
 
 def create_table(table):
