@@ -99,8 +99,7 @@ public class TextProcessor {
 			if (bannedWordsMap.containsKey(word)) {
 				String cencoredWord = words[i].charAt(0) + bannedWordsMap.get(word)
 						+ words[i].charAt(word.length() - 1);
-				//TODO handle b_a55_1
-				cencoredText = cencoredText.replaceAll("\\b" + words[i] + "\\b", cencoredWord);
+				cencoredText = cencoredText.replaceAll("(?<=[^a-zA-Z0-9])" + words[i] + "(?=[^a-zA-Z0-9])", cencoredWord);
 			}
 		}
 		return cencoredText;
