@@ -9,7 +9,7 @@ TABLE_NAME = "tweets"
 DELIMITER = "<15619_delimiter>"
 NEWLINE = "<15619_newline>"
 #Remember to modify the DNS address of HBase master
-DNS = "ec2-54-165-248-154.compute-1.amazonaws.com"
+DNS = "???"
 connection = happybase.Connection(DNS)
 
 def create_table(table):
@@ -34,7 +34,7 @@ def main():
 				epoch = tweet['epoch'].encode('utf-8')
 				text = tweet['text'].encode('utf-8')
 				tweet_batch.put(
-					tweet['uid'],
+					uid + time + tid,
 					{
 						'info:score': score,
 						'info:text': text,
