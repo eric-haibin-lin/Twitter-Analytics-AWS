@@ -1,0 +1,1 @@
+/home/hadoop/hbase/bin/hbase-daemon.sh start thrift
