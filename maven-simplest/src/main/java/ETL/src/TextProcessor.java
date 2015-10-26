@@ -53,7 +53,7 @@ public class TextProcessor {
 			formatterFrom = new SimpleDateFormat(patternFrom);
 			formatterTo = new SimpleDateFormat(patternTo);
 		} catch (FileNotFoundException ex) {
-			System.out.println("File 'banned.txt' Not Found!");
+			ex.printStackTrace();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
