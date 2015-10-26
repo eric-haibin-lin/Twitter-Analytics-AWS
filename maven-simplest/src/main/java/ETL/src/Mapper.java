@@ -32,6 +32,7 @@ public class Mapper {
 				    	String tid = jsonObj.getString("id_str");
 						result.put("score", String.valueOf(textProcessor.SentimentScore(text)));
 						result.put("text", textProcessor.TextCensor(text));
+						result.put("original_text", text);
 						result.put("uid", uid);
 						result.put("tid", tid);
 						result.put("time", formatterTo.format(date));
