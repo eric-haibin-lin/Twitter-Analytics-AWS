@@ -30,14 +30,84 @@
     </dependency>
 
     <dependency>
-      <groupId>json</groupId>
-      <artifactId>json</artifactId>
-      <version>20140107</version>
+      <groupId>commons</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.6</version>
+    </dependency>
+    <dependency>
+      <groupId>commons</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.3</version>
+    </dependency>
+    <dependency>
+      <groupId>commons</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>core</groupId>
+      <artifactId>core</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>hbase</groupId>
+      <artifactId>hbase</artifactId>
+      <version>0.94.0</version>
     </dependency>
     <dependency>
       <groupId>jdbc</groupId>
       <artifactId>mysqlconnector</artifactId>
       <version>5.1.37</version>
+    </dependency>
+    <dependency>
+      <groupId>json</groupId>
+      <artifactId>json</artifactId>
+      <version>20140107</version>
+    </dependency>
+    <dependency>
+      <groupId>leveldbjni</groupId>
+      <artifactId>leveldbjni-all</artifactId>
+      <version>1.8</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.16</version>
+    </dependency>
+    <dependency>
+      <groupId>logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>2.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.6.1</version>
+    </dependency>
+    <dependency>
+      <groupId>zookeeper</groupId>
+      <artifactId>zookeeper</artifactId>
+      <version>3.4.5</version>
     </dependency>
 
   </dependencies>
