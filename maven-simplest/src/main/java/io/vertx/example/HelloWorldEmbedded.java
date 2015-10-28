@@ -23,12 +23,13 @@ import com.mysql.jdbc.Statement;
  */
 public class HelloWorldEmbedded {
 
-    private static final byte[] DATA = "data".getBytes();
-    private static final byte[] TEXT = "text".getBytes();
-    private static final String TABLE_NAME = "tweets";
-    private static final String MYSQL_URL = "jdbc:mysql://ec2-54-173-14-165.compute-1.amazonaws.com:3306/tweet";
-    private static final String userName = "root";
-    private static final String passWord = "coding15619";
+    private static final String MODE = "Hbase";
+    private static final String HBASE_MODE = "Hbase";
+    private static final String MYSQL_MODE = "Mysql";
+    private static final String USER_ID = "userid";
+    private static final String TWEET_TIME = "tweet_time";
+    private static final String TEAM_INFO = "Coding Squirrels,9327-7717-4260\n";
+
 
   public static void main(String[] args) {
 
@@ -38,21 +39,13 @@ public class HelloWorldEmbedded {
         e.printStackTrace();
     }
 
-    String url = MYSQL_URL;
     //String url = "jdbc:mysql://localhost:3306/tweet";
 
-    try{
-        Configuration config = HBaseConfiguration.create();
-        config.set("hbase.zookeeper.quorum", "localhost");
-        //config.set("hbase.zookeeper.property.clientPort", "2181");
-        HBaseAdmin admin = new HBaseAdmin(config);
-        String row = "12408871992014-05-15+09:02:21466866162106511360";
-        HTable tableTweets = new HTable(config, TABLE_NAME);
-        Get get = new Get(Bytes.toBytes(row));
-        Result result = tableTweets.get(get);
-        System.out.println("Get: " + new String(result.getValue(DATA, TEXT), "UTF-8"));
-    } catch (IOException e){
-        e.printStackTrace();
+    DataHandler dataHandler;
+    if (MODE.equals(HBASE_MODE)){
+      dataHandler = new HbaseHandler();
+    } else {
+      dataHandler = new MysqlHandler();
     }
 
     //Connection conn = null;
@@ -63,16 +56,19 @@ public class HelloWorldEmbedded {
     //}
     //final Connection con = conn;
 
+    //TODO path should be /q2
     Vertx.vertx().createHttpServer().requestHandler(req -> {
-        String userId = req.params().get("userid");
-        String tweetTime = req.params().get("tweet_time");
-        String resString = "Coding Squirrels,9327-7717-4260\n";
+        String userId = req.params().get(USER_ID);
+        String tweetTime = req.params().get(TWEET_TIME);
+        String resString = TEAM_INFO;
 
         if ( userId == null || tweetTime == null || userId.isEmpty() || tweetTime.isEmpty()) {
             resString = "Parameters invalid!";
         } else {
+
+            System.out.println(tweetTime);
             tweetTime = tweetTime.replace(" ", "+");
-          
+            resString = TEAM_INFO + dataHandler.getQuery2(userId, tweetTime);
             //try {
             //    Statement sql_statement = (Statement) con.createStatement();
             //    System.out.println(tweetTime);
