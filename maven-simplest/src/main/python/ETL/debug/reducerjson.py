@@ -5,7 +5,7 @@ import os
 import happybase
 import json
 
-DELIMITER = ","
+DELIMITER = "\t"
 
 for line in sys.stdin:
 	try:
