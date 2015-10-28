@@ -10,9 +10,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-/**
- * @author <a href="http://tfox.org">Tim Fox</a>
- */
+
 public class HbaseHandler implements DataHandler {
 
   private static final byte[] DATA = "data".getBytes();

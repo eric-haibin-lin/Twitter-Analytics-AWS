@@ -1,26 +1,10 @@
 package io.vertx.example;
 
 import io.vertx.core.Vertx;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.io.IOException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.util.Bytes;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import com.mysql.jdbc.Statement;
+import io.vertx.core.http.HttpServer;
+import org.vertx.java.core.http.RouteMatcher;
 
-/**
- * @author <a href="http://tfox.org">Tim Fox</a>
- */
+
 public class HelloWorldEmbedded {
 
     private static final String MODE = "Hbase";
@@ -55,6 +39,10 @@ public class HelloWorldEmbedded {
     //    e.printStackTrace();
     //}
     //final Connection con = conn;
+
+    final RouteMatcher routeMatcher = new RouteMatcher();
+
+//    final HttpServer server = vertx.createHttpServer();
 
     //TODO path should be /q2
     Vertx.vertx().createHttpServer().requestHandler(req -> {
