@@ -17,6 +17,7 @@ for line in sys.stdin:
 		epoch = tweet['epoch'].encode('utf-8')
 		textObj = {}
 		textObj['text'] = tweet['text'].encode('utf-8')
-		print(uid+time+tid, tid, uid, score, time, epoch, json.dumps(textObj), sep=DELIMITER)
+		print(uid+time+tid, tid, uid, score, time, epoch, json.dumps(tweet, ensure_ascii=False).encode('utf8'), sep=DELIMITER)
 	except Exception, e:
+		# raise
 		pass

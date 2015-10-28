@@ -17,7 +17,9 @@ public class HbaseHandler implements DataHandler {
 
   private static final byte[] DATA = "data".getBytes();
   private static final byte[] TEXT = "text".getBytes();
-  private static final String TABLE_NAME = "tweettest";
+  private static final byte[] TID = "tid".getBytes();
+  private static final byte[] SCORE = "score".getBytes();
+  private static final String TABLE_NAME = "tweet";
 
   private HTable tweetTable;
 
@@ -50,9 +52,10 @@ public class HbaseHandler implements DataHandler {
       ResultScanner scanner = tweetTable.getScanner(scan);
       for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
       {
-        //TODO handle more column information retrieval
         String textJson = new String(rowResult.getValue(DATA, TEXT), "UTF-8");
-        result += getText(textJson) + "\n";
+        String tid = new String(rowResult.getValue(DATA, TID), "UTF-8");
+        String score = new String(rowResult.getValue(DATA, SCORE), "UTF-8");
+        result += tid + ":" + score + ":" + getText(textJson) + "\n";
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -71,7 +74,6 @@ public class HbaseHandler implements DataHandler {
     }
     return result;
   }
-
 
 }
 
