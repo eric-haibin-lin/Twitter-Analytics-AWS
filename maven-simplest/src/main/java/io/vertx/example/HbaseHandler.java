@@ -3,10 +3,7 @@ package io.vertx.example;
 import io.vertx.core.Vertx;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONObject;
 
@@ -18,9 +15,9 @@ import java.io.UnsupportedEncodingException;
  */
 public class HbaseHandler implements DataHandler {
 
-  private static final byte[] DATA = "info".getBytes();
+  private static final byte[] DATA = "data".getBytes();
   private static final byte[] TEXT = "text".getBytes();
-  private static final String TABLE_NAME = "tweets";
+  private static final String TABLE_NAME = "tweettest";
 
   private HTable tweetTable;
 
@@ -42,14 +39,21 @@ public class HbaseHandler implements DataHandler {
 
   @Override
   public String getQuery2(String userId, String tweetTime) {
-    String row = "10051589832014-05-16+09:53:17467241367769714688";
-    Get get = new Get(Bytes.toBytes(row));
-    String result = null;
+    String userTimeStart = userId + tweetTime;
+    String userTimeEnd = userTimeStart + "a";
+    String result = "";
     try {
-      Result hResult = tweetTable.get(get);
+      //creating a scan object with start and stop row keys
+      Scan scan = new Scan(Bytes.toBytes(userTimeStart),Bytes.toBytes(userTimeEnd));
 
-      //TODO parse json object getText(result)
-      result = new String(hResult.getValue(DATA, TEXT), "UTF-8");
+      //And then you can get a scanner object and iterate through your results
+      ResultScanner scanner = tweetTable.getScanner(scan);
+      for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
+      {
+        //TODO handle more column information retrieval
+        String textJson = new String(rowResult.getValue(DATA, TEXT), "UTF-8");
+        result += getText(textJson) + "\n";
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -57,9 +61,17 @@ public class HbaseHandler implements DataHandler {
   }
 
   private String getText(String textStr){
-    JSONObject json = new JSONObject(textStr);
-    return json.getString("text");
+    String result = null;
+    try {
+      JSONObject json = new JSONObject(textStr);
+      result = json.getString("text");
+      System.out.println(result);
+    } catch (Exception e){
+      return "Exception during getText";
+    }
+    return result;
   }
+
 
 }
 
