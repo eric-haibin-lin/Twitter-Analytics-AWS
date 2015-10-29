@@ -22,6 +22,41 @@ public class MysqlHandler implements DataHandler {
 
   @Override
   public String getQuery2(String userId, String tweetTime) {
+
+//    try {
+//      Class.forName("com.mysql.jdbc.Driver").newInstance();
+//    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+//      e.printStackTrace();
+//    }
+//
+//    String url = "jdbc:mysql://localhost:3306/tweet";
+//    Connection conn = null;
+//    try {
+//        conn = DriverManager.getConnection(url, userName, passWord);
+//    } catch (SQLException e) {
+//        e.printStackTrace();
+//    }
+//    final Connection con = conn;
+//
+//    try {
+//        Statement sql_statement = (Statement) con.createStatement();
+//        System.out.println(tweetTime);
+//        String query = "SELECT tid, score, text FROM tweet WHERE uid = '" + userId + "' AND timestamp = '" + tweetTime + "'";
+//        ResultSet result = sql_statement.executeQuery(query);
+//
+//        while (result.next()) {
+//            String uid = result.getString("tid");
+//            String score = result.getString("score");
+//            String text = result.getString("text");
+//            System.out.println(uid + score + text);
+//
+//            resString += uid + ":" + score + ":" + text + "\n";
+//        }
+//    } catch (SQLException e) {
+//        e.printStackTrace();
+//    }
+
+
     return null;
   }
 }
