@@ -19,14 +19,12 @@ public class HelloWorldEmbedded {
 
   public static void main(String[] args) {
 
-
     DataHandler dataHandler;
     if (MODE.equals(HBASE_MODE)){
       dataHandler = new HbaseHandler();
     } else {
       dataHandler = new MysqlHandler();
     }
-
     Vertx.vertx().createHttpServer().requestHandler(req -> {
       String path = req.path();
       switch (path) {
@@ -46,10 +44,20 @@ public class HelloWorldEmbedded {
     }).listen(80);
   }
 
+  /**
+   * handles query 3
+   * @param dataHandler
+   * @param req request
+   */
   private static void handleQ3Request(DataHandler dataHandler, HttpServerRequest req) {
     req.response().end("Not implemented yet");
   }
 
+  /**
+   * handles query 2
+   * @param dataHandler
+   * @param req
+   */
   private static void handleQ2Request(DataHandler dataHandler, HttpServerRequest req) {
     String userId = req.params().get(USER_ID);
     String tweetTime = req.params().get(TWEET_TIME);
@@ -65,6 +73,10 @@ public class HelloWorldEmbedded {
     req.response().end(resString);
   }
 
+  /**
+   * handles query 1
+   * @param req
+   */
   private static void handleQ1Request(HttpServerRequest req) {
     req.response().end("auth result");
   }

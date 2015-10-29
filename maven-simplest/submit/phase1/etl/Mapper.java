@@ -19,7 +19,6 @@ public class Mapper {
 		formatterTo = new SimpleDateFormat(patternTo);
 		try{
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-			/* do text processing on each record */
 			while((line = bufferedReader.readLine()) != null){
 				try{
 					JSONObject result = new JSONObject();
