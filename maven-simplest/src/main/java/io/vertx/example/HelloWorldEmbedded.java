@@ -6,7 +6,7 @@ import io.vertx.core.http.HttpServerRequest;
 
 public class HelloWorldEmbedded {
 
-    private static final String MODE = "Hbase";
+    private static final String MODE = "Mysql";
     private static final String HBASE_MODE = "Hbase";
     private static final String MYSQL_MODE = "Mysql";
     private static final String USER_ID = "userid";
@@ -70,6 +70,7 @@ public class HelloWorldEmbedded {
       tweetTime = tweetTime.replace(" ", "+");
       resString = TEAM_INFO + dataHandler.getQuery2(userId, tweetTime);
     }
+    req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
     req.response().end(resString);
   }
 
