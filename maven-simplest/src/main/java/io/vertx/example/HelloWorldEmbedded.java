@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class HelloWorldEmbedded {
 
-    private static final String MODE = "";
+    private static final String MODE = "Mysql";
     private static final String HBASE_MODE = "Hbase";
     private static final String MYSQL_MODE = "Mysql";
     private static final String USER_ID = "userid";
@@ -76,7 +76,7 @@ public class HelloWorldEmbedded {
     if (userId == null || tweetTime == null || userId.isEmpty() || tweetTime.isEmpty()) {
       resString = "Parameters invalid!";
     } else {
-      System.out.println(tweetTime);
+      //System.out.println(tweetTime);
       tweetTime = tweetTime.replace(" ", "+");
       resString = TEAM_INFO + dataHandler.getQuery2(userId, tweetTime);
     }

@@ -50,9 +50,9 @@ public class MysqlHandler implements DataHandler {
             String score = result.getString("score");
             String text = result.getString("text");
 
-            System.out.println(uid + score + text);
+            //System.out.println(uid + score + text);
             text = new JSONObject(text).getString("text");
-            System.out.println(uid + score + text);
+            //System.out.println(uid + score + text);
 
             resString += uid + ":" + score + ":" + text + "\n";
         }
