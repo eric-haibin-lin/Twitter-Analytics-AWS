@@ -10,6 +10,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
 import java.sql.*;
+import org.json.JSONObject;
 
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
@@ -18,7 +19,7 @@ public class MysqlHandler implements DataHandler {
 
   private static final String userName = "root";
   private static final String passWord = "coding15619";
-  private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/employees";
+  private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/tweet";
 
   public MysqlHandler() {
     try {
@@ -40,15 +41,19 @@ public class MysqlHandler implements DataHandler {
     final Connection con = conn;
     try {
         Statement sql_statement = con.createStatement();
-        System.out.println(tweetTime);
-        String query = "SELECT tid, score, text FROM tweet WHERE uid = '" + userId + "' AND timestamp = '" + tweetTime + "'";
+        String query = "SELECT tid, score, text FROM tweet WHERE uid = '" 
+                            + userId + "' AND timestamp = '" + tweetTime + "'";
         ResultSet result = sql_statement.executeQuery(query);
         //TODO add json parsing part
         while (result.next()) {
             String uid = result.getString("tid");
             String score = result.getString("score");
             String text = result.getString("text");
+
             System.out.println(uid + score + text);
+            text = new JSONObject(text).getString("text");
+            System.out.println(uid + score + text);
+
             resString += uid + ":" + score + ":" + text + "\n";
         }
     } catch (SQLException e) {
