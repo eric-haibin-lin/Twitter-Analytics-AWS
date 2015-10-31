@@ -38,8 +38,8 @@ public class HbaseHandler implements DataHandler {
 
   @Override
   public String getQuery2(String userId, String tweetTime) {
-    String userTimeStart = userId + tweetTime;
-    String userTimeEnd = userTimeStart + "a";
+    String userTimeStart = userId + "_" +tweetTime;
+    String userTimeEnd = userTimeStart + "_a";
     String result = "";
     try {
       //creating a scan object with start and stop row keys
