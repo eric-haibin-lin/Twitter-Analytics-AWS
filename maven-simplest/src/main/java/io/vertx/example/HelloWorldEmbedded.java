@@ -3,10 +3,14 @@ package io.vertx.example;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+import java.util.Date;
+
 
 public class HelloWorldEmbedded {
 
-    private static final String MODE = "Mysql";
+    private static final String MODE = "";
     private static final String HBASE_MODE = "Hbase";
     private static final String MYSQL_MODE = "Mysql";
     private static final String USER_ID = "userid";
@@ -16,15 +20,21 @@ public class HelloWorldEmbedded {
     private static final String Q2_ENDPOINT = "/q2";
     private static final String Q3_ENDPOINT = "/q3";
     private static final String Q4_ENDPOINT = "/q4";
+    //private static final String PRIVATE_KEY = System.getenv("$PRIVATE_KEY");
+    private static final String PRIVATE_KEY = "8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773";
 
   public static void main(String[] args) {
 
     DataHandler dataHandler;
-    if (MODE.equals(HBASE_MODE)){
+    if (MODE.equals(HBASE_MODE)) {
       dataHandler = new HbaseHandler();
-    } else {
+    } else if (MODE.equals(MYSQL_MODE)) {
       dataHandler = new MysqlHandler();
+    } else {
+      dataHandler = null;
+      System.out.println("Testing only Q1...");
     }
+
     Vertx.vertx().createHttpServer().requestHandler(req -> {
       String path = req.path();
       switch (path) {
@@ -79,7 +89,25 @@ public class HelloWorldEmbedded {
    * @param req
    */
   private static void handleQ1Request(HttpServerRequest req) {
-    req.response().end("auth result");
+    PhaistosDiscCipher pdc = new PhaistosDiscCipher(PRIVATE_KEY);
+    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    timeFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+    String now = timeFormat.format(new Date());
+
+
+    String publicKeyY = req.params().get("key");
+    String messageM = req.params().get("message");
+    String resString = TEAM_INFO;
+
+    if (messageM == null || publicKeyY == null || messageM.isEmpty() || publicKeyY.isEmpty()) {
+        resString = "Parameters invalid!";
+    } else {
+        resString = pdc.decrypt(messageM, publicKeyY);
+    }
+
+    resString = TEAM_INFO + now + "\n" + resString + "\n";
+
+    req.response().end(resString);
   }
 
 }
