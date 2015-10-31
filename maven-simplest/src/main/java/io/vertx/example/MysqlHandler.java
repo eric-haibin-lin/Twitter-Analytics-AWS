@@ -21,6 +21,8 @@ public class MysqlHandler implements DataHandler {
   private static final String passWord = "coding15619";
   private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/tweet";
 
+  private static final Connection con = getConnection();
+
   public MysqlHandler() {
     try {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -29,22 +31,29 @@ public class MysqlHandler implements DataHandler {
     }
   }
 
+  public static Connection getConnection() {
+    Connection conSql = null;
+    try {
+        conSql = DriverManager.getConnection(MYSQL_URL, userName, passWord);
+    } catch (SQLException e) {
+	e.printStackTrace();
+    }
+    
+    return conSql;
+  }
+
   @Override
   public String getQuery2(String userId, String tweetTime) {
     String resString = "";
-    Connection conn = null;
+    //Connection con = null;
     try {
-        conn = DriverManager.getConnection(MYSQL_URL, userName, passWord);
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    final Connection con = conn;
-    try {
+        //Connection con = DriverManager.getConnection(MYSQL_URL, userName, passWord);
+
         Statement sql_statement = con.createStatement();
         String query = "SELECT tid, score, text FROM tweet WHERE uid = '" 
                             + userId + "' AND timestamp = '" + tweetTime + "'";
         ResultSet result = sql_statement.executeQuery(query);
-        //TODO add json parsing part
+
         while (result.next()) {
             String uid = result.getString("tid");
             String score = result.getString("score");
