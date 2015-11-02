@@ -6,7 +6,7 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-public class Mapper {
+public class HBaseMapper {
 	private final static long TIME_FILTER = 1397952000;
 	public static void main(String[] args) throws FileNotFoundException {
 		TextProcessor textProcessor = new TextProcessor();

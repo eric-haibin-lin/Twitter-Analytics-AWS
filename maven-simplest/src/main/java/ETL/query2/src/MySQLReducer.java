@@ -4,10 +4,11 @@ import java.io.InputStreamReader;
 
 import org.json.JSONObject;
 
-public class Reducer {
-
-	private final static String DELIMITER = "@15619@delimiter@";
-	private final static String NEWLINE = "@15619@newline@\n";
+/**
+ * This is the reducer for MySQL data
+ * @author Yifan
+ */
+public class MySQLReducer {
 
 	public static void main(String[] args) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -19,15 +20,10 @@ public class Reducer {
 					JSONObject jsonObj = new JSONObject(line);
 					StringBuilder sb = new StringBuilder();
 					sb.append(jsonObj.getString("uid"));
-					sb.append(DELIMITER);
 					sb.append(jsonObj.get("score"));
-					sb.append(DELIMITER);
 					sb.append(jsonObj.get("time"));
-					sb.append(DELIMITER);
 					sb.append(jsonObj.get("epoch"));
-					sb.append(DELIMITER);
 					sb.append(jsonObj.get("text"));
-					sb.append(NEWLINE);
 					System.out.print(sb.toString());
 				} catch (Exception e){
 					e.printStackTrace();
