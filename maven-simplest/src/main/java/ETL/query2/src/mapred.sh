@@ -4,7 +4,7 @@ if [ "$#" != "3" ]; then
 else
     if [ "$2" == "mapred" ]; then
         cat ../../test_cases/test_case_$3/input | java -classpath MapRed.jar:../json-20140107.jar $1Mapper | sort | java -classpath MapRed.jar:../json-20140107.jar $1Reducer
-
-
+    elif [ "$2" == "map" ]; then
+        cat ../../test_cases/test_case_$3/input | java -classpath MapRed.jar:../json-20140107.jar $1Mapper
     fi
 fi
