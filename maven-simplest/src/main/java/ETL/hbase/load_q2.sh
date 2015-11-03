@@ -9,9 +9,9 @@ else
     hadoop fs -mkdir /$1
     hadoop fs -put * /$1
     echo "=======================Creating table in HBase..==============================="
-    echo "create '$1', {NAME => 'data'}" | hbase shell
+    echo "create '$1', {NAME => 'd'}" | hbase shell
     echo "=======================Converting tsv to Hfile..==============================="
-    hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.bulk.output=output_$1 -Dimporttsv.columns=HBASE_ROW_KEY,data:result $1 /$1
+    hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.bulk.output=output_$1 -Dimporttsv.columns=HBASE_ROW_KEY,d:r $1 /$1
     echo "=======================Loading Hfile to HBase...==============================="
     hbase org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles output_$1 $1
     echo "=======================Fetching top 50 records in HBase...==============================="

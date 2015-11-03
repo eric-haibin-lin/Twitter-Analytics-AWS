@@ -10,11 +10,8 @@ import java.io.IOException;
 
 public class HbaseHandler implements DataHandler {
 
-  private static final byte[] DATA = "data".getBytes();
-  private static final byte[] TEXT = "text".getBytes();
-  private static final byte[] RESULT = "result".getBytes();
-  private static final byte[] TID = "tid".getBytes();
-  private static final byte[] SCORE = "score".getBytes();
+  private static final byte[] DATA = "d".getBytes();
+  private static final byte[] RESULT = "r".getBytes();
   private static final String TABLE_NAME = "testcase2_1";
 
   private HTable tweetTable;
