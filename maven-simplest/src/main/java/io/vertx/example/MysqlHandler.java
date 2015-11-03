@@ -55,15 +55,15 @@ public class MysqlHandler implements DataHandler {
         ResultSet result = sql_statement.executeQuery(query);
 
         while (result.next()) {
-            String uid = result.getString("tid");
+            String tid = result.getString("tid");
             String score = result.getString("score");
             String text = result.getString("text");
 
-            //System.out.println(uid + score + text);
+            //System.out.println(tid + score + text);
             text = new JSONObject(text).getString("text");
-            //System.out.println(uid + score + text);
+            //System.out.println(tid + score + text);
 
-            resString += uid + ":" + score + ":" + text + "\n";
+            resString += tid + ":" + score + ":" + text + "\n";
         }
     } catch (SQLException e) {
         e.printStackTrace();

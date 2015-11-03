@@ -69,19 +69,24 @@ public class HelloWorldEmbedded {
    * @param req
    */
   private static void handleQ2Request(DataHandler dataHandler, HttpServerRequest req) {
-    String userId = req.params().get(USER_ID);
-    String tweetTime = req.params().get(TWEET_TIME);
-    String resString = TEAM_INFO;
-
-    if (userId == null || tweetTime == null || userId.isEmpty() || tweetTime.isEmpty()) {
-      resString = "Parameters invalid!";
-    } else {
-      //System.out.println(tweetTime);
-      tweetTime = tweetTime.replace(" ", "+");
-      resString = TEAM_INFO + dataHandler.getQuery2(userId, tweetTime);
-    }
-    req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
-    req.response().end(resString);
+    Thread t = new Thread(new Runnable() {
+        public void run() {
+            String userId = req.params().get(USER_ID);
+            String tweetTime = req.params().get(TWEET_TIME);
+            String resString = TEAM_INFO;
+            if (userId == null || tweetTime == null || 
+                userId.isEmpty() || tweetTime.isEmpty()) {
+              resString = "Parameters invalid!";
+            } else {
+              //System.out.println(tweetTime);
+              tweetTime = tweetTime.replace(" ", "+");
+              resString = TEAM_INFO + dataHandler.getQuery2(userId, tweetTime);
+            }
+            req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+            req.response().end(resString);
+        }
+    });
+    t.start();
   }
 
   /**
@@ -89,27 +94,32 @@ public class HelloWorldEmbedded {
    * @param req
    */
   private static void handleQ1Request(HttpServerRequest req) {
-    PhaistosDiscCipher pdc = new PhaistosDiscCipher(PRIVATE_KEY);
-    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    timeFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-    String now = timeFormat.format(new Date());
+    Thread t = new Thread(new Runnable() {
+        public void run() {
+          PhaistosDiscCipher pdc = new PhaistosDiscCipher(PRIVATE_KEY);
+          SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          timeFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+          String now = timeFormat.format(new Date());
 
 
-    String publicKeyY = req.params().get("key");
-    String messageM = req.params().get("message");
-    String resString = TEAM_INFO;
+          String publicKeyY = req.params().get("key");
+          String messageM = req.params().get("message");
+          String resString = TEAM_INFO;
 
-    if (messageM == null || publicKeyY == null || messageM.isEmpty() || publicKeyY.isEmpty()) {
-        resString = "Parameters invalid!";
-    } else {
-        resString = pdc.decrypt(messageM, publicKeyY);
-    }
+          if (messageM == null || publicKeyY == null || 
+              messageM.isEmpty() || publicKeyY.isEmpty()) {
+              resString = "Parameters invalid!";
+          } else {
+              resString = pdc.decrypt(messageM, publicKeyY);
+          }
 
-    resString = TEAM_INFO + now + "\n" + resString + "\n";
+          resString = TEAM_INFO + now + "\n" + resString + "\n";
 
-    req.response().end(resString);
+          req.response().end(resString);
+      }
+    });
+    t.start();
   }
-
 }
 
 
