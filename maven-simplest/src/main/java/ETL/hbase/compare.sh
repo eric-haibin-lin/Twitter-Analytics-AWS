@@ -6,7 +6,7 @@ else
     rm err.log
     rm tmp1 2>> err.log
     rm tmp2 2>> err.log
-    cat $1 | while read line
+    cat query_$1 | while read line
     do
         if [ "$line" != "" ]; then
             formattedline=${line// /+}
