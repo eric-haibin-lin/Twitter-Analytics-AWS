@@ -39,7 +39,9 @@ public class HbaseHandler implements DataHandler {
 
   @Override
   public String getQuery2(String userId, String tweetTime) {
-    String userTimeStart = userId + "_" +tweetTime;
+    //TODO: no need to replace " " with "+" for HBase
+    tweetTime = tweetTime.replace("+", " ");
+    String userTimeStart = userId + "_" + tweetTime;
     String userTimeEnd = userTimeStart + "_a";
     String result = "";
     try {
