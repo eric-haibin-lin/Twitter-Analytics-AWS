@@ -12,9 +12,10 @@ public class HbaseHandler implements DataHandler {
 
   private static final byte[] DATA = "data".getBytes();
   private static final byte[] TEXT = "text".getBytes();
+  private static final byte[] RESULT = "result".getBytes();
   private static final byte[] TID = "tid".getBytes();
   private static final byte[] SCORE = "score".getBytes();
-  private static final String TABLE_NAME = "tweet";
+  private static final String TABLE_NAME = "testcase2_1";
 
   private HTable tweetTable;
 
@@ -49,10 +50,10 @@ public class HbaseHandler implements DataHandler {
       ResultScanner scanner = tweetTable.getScanner(scan);
       for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
       {
-        String textJson = new String(rowResult.getValue(DATA, TEXT), "UTF-8");
-        String tid = new String(rowResult.getValue(DATA, TID), "UTF-8");
-        String score = new String(rowResult.getValue(DATA, SCORE), "UTF-8");
-        result += tid + ":" + score + ":" + getText(textJson) + "\n";
+        //TODO possibly have to replace \\t with \t?
+        String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
+        record = record.replace("\\n", "\n");
+        result += record;
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -78,6 +79,3 @@ public class HbaseHandler implements DataHandler {
   }
 
 }
-
-
-
