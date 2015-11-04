@@ -1,11 +1,8 @@
 if [ "$#" != "1" ]; then
-    echo "This script creates a table in HBase. At least 1000 testcases are required"
-    echo "Usage: ./load_q2.sh test#"
-    echo "Example: ./load_q2.sh testcase1_2"
+    echo "This script creates a table in HBase using all files under current directory. At least 1000 testcases are required"
+    echo "Usage: ./load_q2.sh table_name"
+    echo "Example: ./load_q2.sh testcase_1_2_table"
 else
-    mkdir $1
-    cd $1
-    aws s3 cp --recursive s3://haibinprivatebucket/ETL/query2/outputs/$1/ .
     hadoop fs -mkdir /$1
     hadoop fs -put * /$1
     echo "=======================Creating table in HBase..==============================="
