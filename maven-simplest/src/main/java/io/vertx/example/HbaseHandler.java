@@ -12,7 +12,7 @@ public class HbaseHandler implements DataHandler {
 
   private static final byte[] DATA = "d".getBytes();
   private static final byte[] RESULT = "r".getBytes();
-  private static final String TABLE_NAME = "testcase2_1";
+  private static final String TABLE_NAME = "tweet";
 
   private HTable tweetTable;
 

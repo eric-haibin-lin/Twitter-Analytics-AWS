@@ -2,7 +2,6 @@ package io.vertx.example;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
-
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 import java.util.Date;

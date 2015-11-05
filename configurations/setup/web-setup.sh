@@ -14,4 +14,3 @@ y
 echo "=================Cloning code============================"
 git clone https://coding_squirrels@bitbucket.org/codingsquirrels/phase1.git
 
-
