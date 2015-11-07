@@ -77,8 +77,6 @@ public class HelloWorldEmbedded {
                 userId.isEmpty() || tweetTime.isEmpty()) {
               resString = "Parameters invalid!";
             } else {
-              //System.out.println(tweetTime);
-              //tweetTime = tweetTime.replace(" ", "+");
               resString = TEAM_INFO + dataHandler.getQuery2(userId, tweetTime);
             }
             req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");

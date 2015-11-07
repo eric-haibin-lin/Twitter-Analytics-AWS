@@ -36,28 +36,36 @@ public class HbaseHandler implements DataHandler {
 
   @Override
   public String getQuery2(String userId, String tweetTime) {
-    //TODO: no need to replace " " with "+" for HBase
-    tweetTime = tweetTime.replace("+", " ");
-    String userTimeStart = userId + "_" + tweetTime;
-    String userTimeEnd = userTimeStart + "_a";
+    String rowKey = userId + "_" + tweetTime;
     String result = "";
     try {
-      //creating a scan object with start and stop row keys
-      Scan scan = new Scan(Bytes.toBytes(userTimeStart),Bytes.toBytes(userTimeEnd));
+      Get get = new Get(Bytes.toBytes(rowKey));
+      Result hResult = tweetTable.get(get);
+      String record = new String(hResult.getValue(DATA, RESULT), "UTF-8");
+      record = record.replace("\\n", "\n");
+      result += record;
 
-      //And then you can get a scanner object and iterate through your results
-      ResultScanner scanner = tweetTable.getScanner(scan);
-      for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
-      {
-        //TODO possibly have to replace \\t with \t?
-        String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
-        record = record.replace("\\n", "\n");
-        result += record;
-      }
     } catch (IOException e) {
       e.printStackTrace();
     }
     return result;
+  }
+
+  public String getQuery3(){
+    //String userTimeStart = userId + "_" + tweetTime;
+    //String userTimeEnd = userTimeStart + "_a";
+    //creating a scan object with start and stop row keys
+    //Scan scan = new Scan(Bytes.toBytes(userTimeStart),Bytes.toBytes(userTimeEnd));
+    //And then you can get a scanner object and iterate through your results
+    //ResultScanner scanner = tweetTable.getScanner(scan);
+    //for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
+    //{
+    //TODO possibly have to replace \\t with \t?
+    //String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
+    //record = record.replace("\\n", "\n");
+    //result += record;
+    //}
+    return null;
   }
 
   /**
