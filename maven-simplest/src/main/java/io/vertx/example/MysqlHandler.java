@@ -45,25 +45,23 @@ public class MysqlHandler implements DataHandler {
   @Override
   public String getQuery2(String userId, String tweetTime) {
     String resString = "";
-    //Connection con = null;
     try {
-        //Connection con = DriverManager.getConnection(MYSQL_URL, userName, passWord);
 
         Statement sql_statement = con.createStatement();
-        String query = "SELECT tid, score, text FROM tweet WHERE uid = '" 
-                            + userId + "' AND timestamp = '" + tweetTime + "'";
+        String q = userId + "_" + tweetTime;
+        String query = "SELECT r FROM tweet1 WHERE q = '" + q +"'";
         ResultSet result = sql_statement.executeQuery(query);
 
-        while (result.next()) {
-            String tid = result.getString("tid");
-            String score = result.getString("score");
-            String text = result.getString("text");
+        System.out.println(q);
 
-            //System.out.println(tid + score + text);
-            text = new JSONObject(text).getString("text");
-            //System.out.println(tid + score + text);
+        if (result.next()) {
+            
+            Blob b = result.getBlob("r");
+            long l = b.length();
+            byte[] bytes = b.getBytes(1, (int) l);
+            resString = new String(bytes);
+            System.out.println(resString);
 
-            resString += tid + ":" + score + ":" + text + "\n";
         }
     } catch (SQLException e) {
         e.printStackTrace();
