@@ -12,5 +12,6 @@ echo "=================Installing git============================"
 sudo yum install git
 y
 echo "=================Cloning code============================"
+echo "=================Please enter Coding16519=========================="
 git clone https://coding_squirrels@bitbucket.org/codingsquirrels/phase1.git
 
