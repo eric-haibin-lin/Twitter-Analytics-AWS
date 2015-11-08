@@ -49,10 +49,10 @@ public class MysqlHandler implements DataHandler {
 
         Statement sql_statement = con.createStatement();
         String q = userId + "_" + tweetTime;
-        String query = "SELECT r FROM tweet1 WHERE q = '" + q +"'";
+        String query = "SELECT r FROM q2 WHERE q = '" + q +"'";
         ResultSet result = sql_statement.executeQuery(query);
 
-        System.out.println(q);
+        //System.out.println(q);
 
         if (result.next()) {
             
@@ -60,7 +60,7 @@ public class MysqlHandler implements DataHandler {
             long l = b.length();
             byte[] bytes = b.getBytes(1, (int) l);
             resString = new String(bytes);
-            System.out.println(resString);
+            //System.out.println(resString);
 
         }
     } catch (SQLException e) {
