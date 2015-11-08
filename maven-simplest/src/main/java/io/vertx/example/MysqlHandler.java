@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.sql.*;
 import org.json.JSONObject;
 
+import javax.sql.DataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
+
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
  */
@@ -21,14 +24,21 @@ public class MysqlHandler implements DataHandler {
   private static final String passWord = "coding15619";
   private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/tweet";
 
-  private static final Connection con = getConnection();
+  private static final DataSource ds = DBCPDataSourceFactory.getDataSource();
+  
+  public static class DBCPDataSourceFactory {
+    public static DataSource getDataSource(){
+      BasicDataSource ds = new BasicDataSource();
+      ds.setDriverClassName("com.mysql.jdbc.Driver");
+      ds.setUrl(MYSQL_URL);
+      ds.setUsername(userName);
+      ds.setPassword(passWord);
+
+      return ds;
+    }
+  }
 
   public MysqlHandler() {
-    try {
-      Class.forName("com.mysql.jdbc.Driver").newInstance();
-    } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-      e.printStackTrace();
-    }
   }
 
   public static Connection getConnection() {
@@ -46,13 +56,12 @@ public class MysqlHandler implements DataHandler {
   public String getQuery2(String userId, String tweetTime) {
     String resString = "";
     try {
+        Connection con = ds.getConnection();
 
         Statement sql_statement = con.createStatement();
         String q = userId + "_" + tweetTime;
         String query = "SELECT r FROM q2 WHERE q = '" + q +"'";
         ResultSet result = sql_statement.executeQuery(query);
-
-        //System.out.println(q);
 
         if (result.next()) {
             
@@ -60,9 +69,13 @@ public class MysqlHandler implements DataHandler {
             long l = b.length();
             byte[] bytes = b.getBytes(1, (int) l);
             resString = new String(bytes);
-            //System.out.println(resString);
 
         }
+
+        if (result != null) result.close();
+        if(sql_statement != null) sql_statement.close();
+        if(con != null) con.close();
+
     } catch (SQLException e) {
         e.printStackTrace();
     }
