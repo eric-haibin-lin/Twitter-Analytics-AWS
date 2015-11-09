@@ -12,9 +12,10 @@ public class HbaseHandler implements DataHandler {
 
   private static final byte[] DATA = "d".getBytes();
   private static final byte[] RESULT = "r".getBytes();
-  private static final String TABLE_NAME = "tweet";
-
-  private HTable tweetTable;
+  //TODO Table name CHANGE TO q2
+  private static final String TABLE_NAME = "q2_32_snap_row";
+  private static HTablePool pool;
+  //private HTable tweetTable;
 
   /**
    * initialize hbase connector
@@ -22,9 +23,12 @@ public class HbaseHandler implements DataHandler {
   private void init(){
     try{
       Configuration config = HBaseConfiguration.create();
-      config.set("hbase.zookeeper.quorum", "localhost");
+      config.set("hbase.zookeeper.quorum", "ec2-54-172-150-4.compute-1.amazonaws.com");
       HBaseAdmin admin = new HBaseAdmin(config);
-      tweetTable = new HTable(config, TABLE_NAME);
+      //Integer.MAX_VALUE
+      pool = new HTablePool(config, 40);
+      //tweetTable = new HTable(config, TABLE_NAME);
+      System.out.println("Done init HBase server");
     } catch (IOException e){
       e.printStackTrace();
     }
@@ -36,28 +40,39 @@ public class HbaseHandler implements DataHandler {
 
   @Override
   public String getQuery2(String userId, String tweetTime) {
-    //TODO: no need to replace " " with "+" for HBase
-    tweetTime = tweetTime.replace("+", " ");
-    String userTimeStart = userId + "_" + tweetTime;
-    String userTimeEnd = userTimeStart + "_a";
+    String rowKey = userId + "_" + tweetTime;
     String result = "";
     try {
-      //creating a scan object with start and stop row keys
-      Scan scan = new Scan(Bytes.toBytes(userTimeStart),Bytes.toBytes(userTimeEnd));
-
-      //And then you can get a scanner object and iterate through your results
-      ResultScanner scanner = tweetTable.getScanner(scan);
-      for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
-      {
-        //TODO possibly have to replace \\t with \t?
-        String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
-        record = record.replace("\\n", "\n");
-        result += record;
-      }
+      HTableInterface tweetTable = pool.getTable(TABLE_NAME);
+      Get get = new Get(Bytes.toBytes(rowKey));
+      Result hResult = tweetTable.get(get);
+      String s = new String(hResult.getRow());
+      System.out.println("The row key is " + s);
+      String record = new String(hResult.getValue(DATA, RESULT), "UTF-8");
+      pool.putTable(tweetTable);
+      record = record.replace("\\n", "\n");
+      result += record;
     } catch (IOException e) {
       e.printStackTrace();
     }
     return result;
+  }
+
+  public String getQuery3(){
+    //String userTimeStart = userId + "_" + tweetTime;
+    //String userTimeEnd = userTimeStart + "_a";
+    //creating a scan object with start and stop row keys
+    //Scan scan = new Scan(Bytes.toBytes(userTimeStart),Bytes.toBytes(userTimeEnd));
+    //And then you can get a scanner object and iterate through your results
+    //ResultScanner scanner = tweetTable.getScanner(scan);
+    //for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
+    //{
+    //TODO possibly have to replace \\t with \t?
+    //String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
+    //record = record.replace("\\n", "\n");
+    //result += record;
+    //}
+    return null;
   }
 
   /**

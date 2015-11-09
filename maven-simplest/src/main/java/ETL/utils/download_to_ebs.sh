@@ -4,13 +4,14 @@ if [ "$#" != "2" ]; then
     echo "Example: ./download_to_ebs.sh s3://haibinprivatebucket/ETL/query2/outputs/full_2 q2"
 else
     #uncomment this line to install file system on a new device
-    #sudo mkfs.ext4 /dev/xvdf
     echo "=======================Mounting the EBS on /storage/$2...==============================="
-    sudo parted /dev/xvdf mklabel gpt
+    #sudo mkfs.ext4 /dev/xvdf
+    #sudo parted /dev/xvdf mklabel gpt
     sudo mkdir /storage
     sudo mkdir /storage/$2
+    sudo mkdir /storage/$2/data
     sudo mount /dev/xvdf /storage/$2
-    cd /storage/$2
+    cd /storage/$2/data
     echo "=======================Downloading file from s3...==============================="
     sudo aws s3 cp --recursive $1 .
 fi
