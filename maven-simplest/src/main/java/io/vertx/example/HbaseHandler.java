@@ -46,6 +46,8 @@ public class HbaseHandler implements DataHandler {
       HTableInterface tweetTable = pool.getTable(TABLE_NAME);
       Get get = new Get(Bytes.toBytes(rowKey));
       Result hResult = tweetTable.get(get);
+      String s = new String(hResult.getRow());
+      System.out.println("The row key is " + s);
       String record = new String(hResult.getValue(DATA, RESULT), "UTF-8");
       pool.putTable(tweetTable);
       record = record.replace("\\n", "\n");

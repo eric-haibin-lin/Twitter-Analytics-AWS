@@ -1,7 +1,6 @@
 if [ "$#" != "3" ]; then
     echo "This script creates query 2 for our server and reference server"
     echo "Usage: ./compare.sh test_file localhost ec2-54-147-18-88.compute-1.amazonaws.com"
-    echo "Example: ./load_q2.sh testcase1_2"
 else
     rm err.log
     rm tmp1 2>> err.log
