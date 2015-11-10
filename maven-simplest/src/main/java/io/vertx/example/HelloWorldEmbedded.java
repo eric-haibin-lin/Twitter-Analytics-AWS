@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class HelloWorldEmbedded {
 
-    private static final String MODE = "Mysql";
+    private static final String MODE = "Hbase";
     private static final String HBASE_MODE = "Hbase";
     private static final String MYSQL_MODE = "Mysql";
     private static final String USER_ID = "userid";
@@ -46,6 +46,9 @@ public class HelloWorldEmbedded {
         case Q3_ENDPOINT:
           handleQ3Request(dataHandler, req);
           break;
+		case Q4_ENDPOINT:
+          handleQ4Request(dataHandler, req);
+          break;
         default:
           req.response().end("Unrecognized endpoint");
           break;
@@ -53,6 +56,30 @@ public class HelloWorldEmbedded {
     }).listen(80);
   }
 
+    /**
+   * handles query 4
+   * @param dataHandler
+   * @param req
+   */
+  private static void handleQ4Request(DataHandler dataHandler, HttpServerRequest req) {
+    Thread t = new Thread(new Runnable() {
+        public void run() {
+            String hashtag = req.params().get("hashtag");
+            String n = req.params().get("n");
+            String resString = TEAM_INFO;
+            if (hashtag == null || n == null || 
+                hashtag.isEmpty() || n.isEmpty()) {
+              resString = "Parameters invalid!";
+            } else {
+              resString = TEAM_INFO + dataHandler.getQuery4(hashtag, Integer.parseInt(n));
+            }
+            req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+            req.response().end(resString);
+        }
+    });
+    t.start();
+  }
+  
   /**
    * handles query 3
    * @param dataHandler

@@ -53,6 +53,11 @@ public class MysqlHandler implements DataHandler {
   }
 
   @Override
+  public String getQuery4(String hashtag, Integer n){
+	  return "Not Implement";
+  }
+  
+  @Override
   public String getQuery2(String userId, String tweetTime) {
     String resString = "";
     try {

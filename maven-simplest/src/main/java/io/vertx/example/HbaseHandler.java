@@ -12,10 +12,15 @@ public class HbaseHandler implements DataHandler {
 
   private static final byte[] DATA = "d".getBytes();
   private static final byte[] RESULT = "r".getBytes();
-  //TODO Table name CHANGE TO q2
+
+  private static final byte[] DATA_Q4 = "d".getBytes();
+  private static final byte[] RESULT_Q4 = "v".getBytes();
+  
   private static final String TABLE_NAME = "q2_32_snap_row";
+  private static final String TABLE_NAME_Q4 = "q4";
+  
   private static HTablePool pool;
-  //private HTable tweetTable;
+
 
   /**
    * initialize hbase connector
@@ -23,11 +28,11 @@ public class HbaseHandler implements DataHandler {
   private void init(){
     try{
       Configuration config = HBaseConfiguration.create();
-      config.set("hbase.zookeeper.quorum", "ec2-54-172-150-4.compute-1.amazonaws.com");
+      config.set("hbase.zookeeper.quorum", "localhost");
       HBaseAdmin admin = new HBaseAdmin(config);
-      //Integer.MAX_VALUE
+      
       pool = new HTablePool(config, 40);
-      //tweetTable = new HTable(config, TABLE_NAME);
+      
       System.out.println("Done init HBase server");
     } catch (IOException e){
       e.printStackTrace();
@@ -46,8 +51,6 @@ public class HbaseHandler implements DataHandler {
       HTableInterface tweetTable = pool.getTable(TABLE_NAME);
       Get get = new Get(Bytes.toBytes(rowKey));
       Result hResult = tweetTable.get(get);
-      String s = new String(hResult.getRow());
-      System.out.println("The row key is " + s);
       String record = new String(hResult.getValue(DATA, RESULT), "UTF-8");
       pool.putTable(tweetTable);
       record = record.replace("\\n", "\n");
@@ -59,21 +62,36 @@ public class HbaseHandler implements DataHandler {
   }
 
   public String getQuery3(){
-    //String userTimeStart = userId + "_" + tweetTime;
-    //String userTimeEnd = userTimeStart + "_a";
-    //creating a scan object with start and stop row keys
-    //Scan scan = new Scan(Bytes.toBytes(userTimeStart),Bytes.toBytes(userTimeEnd));
-    //And then you can get a scanner object and iterate through your results
-    //ResultScanner scanner = tweetTable.getScanner(scan);
-    //for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
-    //{
-    //TODO possibly have to replace \\t with \t?
-    //String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
-    //record = record.replace("\\n", "\n");
-    //result += record;
-    //}
+
     return null;
   }
+  
+  @Override
+  public String getQuery4(String hashtag, Integer n){
+	    String rowKey = hashtag;
+	    String result = "";
+	    try {
+	      HTableInterface q4Table = pool.getTable(TABLE_NAME_Q4);
+	      Get get = new Get(Bytes.toBytes(rowKey));
+	      Result hResult = q4Table.get(get);
+	      if (hResult == null) {
+                  System.out.println("Cannot find rowKey: " + rowKey);
+                  return "";
+              }
+
+	      String record = new String(hResult.getValue(DATA_Q4, RESULT_Q4), "UTF-8");
+	      pool.putTable(q4Table);
+	      record = record.replace("\\t", "\t")
+	    		  .replace("\\n", "\n").replace("\\\\", "\\");
+	      String [] lines = record.split("\b");
+	      for(int i = 0 ; i < lines.length && i < n; i++ ) {
+	    	  result += lines[i] + "\n";
+	      }
+	    } catch (IOException e) {
+	      e.printStackTrace();
+	    }
+	    return result;
+	  }
 
   /**
    * get the text field from a json object
