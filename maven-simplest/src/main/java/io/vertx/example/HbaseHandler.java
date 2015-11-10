@@ -61,8 +61,8 @@ public class HbaseHandler implements DataHandler {
     return result;
   }
 
-  public String getQuery3(){
-
+  public String getQuery3(String userId, String startDate,
+                          String endDate, String number) {
     return null;
   }
   
