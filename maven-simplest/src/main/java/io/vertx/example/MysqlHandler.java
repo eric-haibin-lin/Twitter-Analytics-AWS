@@ -64,9 +64,41 @@ public class MysqlHandler implements DataHandler {
   }
 
   @Override
-  public String getQuery4(String hashtag, Integer n) {
-	  return "Not Implement";
-  }
+	public String getQuery4(String hashtag, Integer n) {
+		String resString = "";
+		try {
+			Connection con = ds.getConnection();
+
+			Statement sql_statement = con.createStatement();
+			String q = hashtag;
+			String query = "SELECT r FROM q4 WHERE q = '" + q + "'";
+			ResultSet result = sql_statement.executeQuery(query);
+
+			if (result.next()) {
+
+				Blob b = result.getBlob("r");
+				long l = b.length();
+				byte[] bytes = b.getBytes(1, (int) l);
+				String record = new String (bytes);
+				String[] lines = record.split("\b");
+				resString = "";
+				for (int i = 0; i < lines.length && i < n; i++) {
+					resString += lines[i] + "\n";
+				}
+			}
+
+			if (result != null)
+				result.close();
+			if (sql_statement != null)
+				sql_statement.close();
+			if (con != null)
+				con.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resString;
+	}
 
   @Override
   public String getQuery3(String userId, String startDate,
@@ -172,6 +204,3 @@ public class MysqlHandler implements DataHandler {
     return resString;
   }
 }
-
-
-
