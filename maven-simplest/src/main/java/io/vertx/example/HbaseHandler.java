@@ -79,7 +79,13 @@ public class HbaseHandler implements DataHandler {
                   return "";
               }
 
-	      String record = new String(hResult.getValue(DATA_Q4, RESULT_Q4), "UTF-8");
+	      byte[] value = hResult.getValue(DATA_Q4, RESULT_Q4);
+              if (value == null) {
+                  System.out.println("Cannot get value for rowKey: "+ rowKey);
+                  return "";
+              }
+              String record = new String(value, "UTF-8");
+
 	      pool.putTable(q4Table);
 	      record = record.replace("\\t", "\t")
 	    		  .replace("\\n", "\n").replace("\\\\", "\\");
