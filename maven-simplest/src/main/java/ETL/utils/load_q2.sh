@@ -3,11 +3,15 @@ if [ "$#" != "2" ]; then
     echo "Usage: ./load_q2.sh table_name file_path"
     echo "Example: ./load_q2.sh testcase1_2_table ./testcase1_2"
 else
-    sudo cd $2
+
+    cd $2
     /home/hadoop/bin/hadoop fs -mkdir /$1
     /home/hadoop/bin/hadoop fs -put * /$1
     echo "=======================Creating table in HBase..==============================="
-    echo "create '$1', {NAME => 'd'}" | hbase shell
+    echo "create '$1', {NAME => 'd', COMPRESSION => 'SNAPPY', BLOOMFILTER => 'ROW', BLOCKSIZE => '32768', IN_MEMORY => true }" | hbase shell
+    echo "disable '$1'" | hbase shell
+    echo "alter '$1', METHOD => 'table_att', MAX_FILESIZE => '33554432'" | hbase shell
+    echo "enable '$1'" | hbase shell
     echo "=======================Converting tsv to Hfile..==============================="
     /home/hadoop/hbase/bin/hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.bulk.output=output_$1 -Dimporttsv.columns=HBASE_ROW_KEY,d:r $1 /$1
     echo "=======================Loading Hfile to HBase...==============================="
