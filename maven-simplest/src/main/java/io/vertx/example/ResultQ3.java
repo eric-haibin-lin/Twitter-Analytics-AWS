@@ -29,12 +29,16 @@ public class ResultQ3 implements Comparator<ResultQ3> {
         } else if (o1.score > o2.score) {
             return -1;
         } else {
-		    return new BigInteger(o1.tid).compareTo(new BigInteger(o2.tid));
+            if (o1.score > 0) {
+		        return new BigInteger(o1.tid).compareTo(new BigInteger(o2.tid));
+            } else {
+                return new BigInteger(o2.tid).compareTo(new BigInteger(o1.tid));
+            }
         }
 	}
 
   public String toString(){
-    return date + "," + score + "," + tid + "," + content + "\n";
+    return date + "," + content + "\n";
   }
 
 }

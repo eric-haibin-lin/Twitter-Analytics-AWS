@@ -132,7 +132,7 @@ public class MysqlHandler implements DataHandler {
         while (result.next()) {
             try {
                 String s = result.getString("q");
-                String dateString = s.substring(s.length() - 6, s.length() - 1);
+                String dateString = s.substring(s.length() - 6, s.length());
                 Calendar tempCal = Calendar.getInstance();
                 tempCal.setTime(formatterTo.parse(dateString));
                 dateString = formatterFrom.format(tempCal.getTime());
@@ -145,8 +145,12 @@ public class MysqlHandler implements DataHandler {
                 for (String res : resStringArr) {
                     //System.out.println(res);
                     String[] elem = res.split(",");
-                    resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
-                                                elem[1], elem[2]));
+                    try {
+                        resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
+                                                elem[1], res));
+                    } catch (ArrayIndexOutOfBoundsException e1) {
+                        System.out.println(s + " " + res);
+                    }
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -159,15 +163,15 @@ public class MysqlHandler implements DataHandler {
         int posCount = 0;
         int negCount = 0;
         for (int i = 0; i < resultList.size(); i++) {
-            if (resultList.get(i).getScore() > 0 && posCount <= n) {
+            if (resultList.get(i).getScore() > 0 && posCount < n) {
                 resString += resultList.get(i).toString();
                 posCount++;
             }
-            if (resultList.get(resultList.size() - i - 1).getScore() < 0 && negCount <= n) {
+            if (resultList.get(resultList.size() - i - 1).getScore() < 0 && negCount < n) {
                 negResString += resultList.get(resultList.size() - i - 1).toString();
                 negCount++;
             }
-            if (posCount > n && negCount > n) {
+            if (posCount >= n && negCount >= n) {
                 break;
             }
         }
