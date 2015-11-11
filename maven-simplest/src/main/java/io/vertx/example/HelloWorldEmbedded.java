@@ -162,31 +162,26 @@ public class HelloWorldEmbedded {
    * @param req
    */
   private static void handleQ1Request(HttpServerRequest req) {
-    Thread t = new Thread(new Runnable() {
-        public void run() {
-          PhaistosDiscCipher pdc = new PhaistosDiscCipher(PRIVATE_KEY);
-          SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          timeFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
-          String now = timeFormat.format(new Date());
+    PhaistosDiscCipher pdc = new PhaistosDiscCipher(PRIVATE_KEY);
+    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    timeFormat.setTimeZone(TimeZone.getTimeZone("GMT-4"));
+    String now = timeFormat.format(new Date());
 
 
-          String publicKeyY = req.params().get("key");
-          String messageM = req.params().get("message");
-          String resString = TEAM_INFO;
+    String publicKeyY = req.params().get("key");
+    String messageM = req.params().get("message");
+    String resString = TEAM_INFO;
 
-          if (messageM == null || publicKeyY == null || 
-              messageM.isEmpty() || publicKeyY.isEmpty()) {
-              resString = "Parameters invalid!";
-          } else {
-              resString = pdc.decrypt(messageM, publicKeyY);
-          }
+    if (messageM == null || publicKeyY == null ||
+        messageM.isEmpty() || publicKeyY.isEmpty()) {
+        resString = "Parameters invalid!";
+    } else {
+        resString = pdc.decrypt(messageM, publicKeyY);
+    }
 
-          resString = TEAM_INFO + now + "\n" + resString + "\n";
+    resString = TEAM_INFO + now + "\n" + resString + "\n";
 
-          req.response().end(resString);
-      }
-    });
-    t.start();
+    req.response().end(resString);
   }
 }
 
