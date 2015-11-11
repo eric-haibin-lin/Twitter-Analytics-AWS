@@ -80,6 +80,8 @@ public class MysqlHandler implements DataHandler {
 				long l = b.length();
 				byte[] bytes = b.getBytes(1, (int) l);
 				String record = new String (bytes);
+				record = record.replace("\\t", "\t").replace("\\n", "\n")
+					.replace("\\\\", "\\");
 				String[] lines = record.split("\b");
 				resString = "";
 				for (int i = 0; i < lines.length && i < n; i++) {
