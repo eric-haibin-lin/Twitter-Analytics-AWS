@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HBaseReducer {
+public class HBaseReducerQ4 {
     public static void main(String[] args) throws FileNotFoundException {
         String line = null;
         ArrayList<HBaseValueOneLine> currentHBaseValue = new ArrayList<HBaseValueOneLine>();

@@ -9,11 +9,14 @@ import java.util.Date;
 
 public class HelloWorldEmbedded {
 
-    private static final String MODE = "Hbase";
+    private static final String MODE = "Mysql";
     private static final String HBASE_MODE = "Hbase";
     private static final String MYSQL_MODE = "Mysql";
     private static final String USER_ID = "userid";
     private static final String TWEET_TIME = "tweet_time";
+    private static final String START_DATE = "start_date";
+    private static final String END_DATE = "end_date";
+    private static final String NUMBER = "n";
     private static final String TEAM_INFO = "Coding Squirrels,9327-7717-4260\n";
     private static final String Q1_ENDPOINT = "/q1";
     private static final String Q2_ENDPOINT = "/q2";
@@ -106,7 +109,28 @@ public class HelloWorldEmbedded {
    * @param req request
    */
   private static void handleQ3Request(DataHandler dataHandler, HttpServerRequest req) {
-    req.response().end("Not implemented yet");
+    Thread t = new Thread(new Runnable() {
+        public void run() {
+            String userId = req.params().get(USER_ID);
+            String startDate = req.params().get(START_DATE);
+            String endDate = req.params().get(END_DATE);
+            String number = req.params().get(NUMBER);
+            String resString = TEAM_INFO;
+            if (userId == null || startDate == null || 
+                endDate == null || number == null ||
+                userId.isEmpty() || startDate.isEmpty() || 
+                endDate.isEmpty() || number.isEmpty()) {
+              resString = "Parameters invalid!";
+            } else {
+              resString = TEAM_INFO + dataHandler.getQuery3(
+                            userId, startDate, endDate, number);
+            }
+            req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+            req.response().end(resString);
+        }
+    });
+    t.start();
+
   }
 
   /**
