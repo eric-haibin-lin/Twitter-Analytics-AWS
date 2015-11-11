@@ -115,6 +115,8 @@ public class TextProcessorQ3 {
 				String cencoredWord = words[i].charAt(0) + bannedWordsMap.get(word)
 						+ words[i].charAt(word.length() - 1);
 				cencoredText = cencoredText.replaceAll("(?<=[^a-zA-Z0-9])" + words[i] + "(?=[^a-zA-Z0-9])", cencoredWord);
+				cencoredText = cencoredText.replaceAll("^" + words[i] + "(?=[^a-zA-Z0-9])", cencoredWord);
+				cencoredText = cencoredText.replaceAll("(?<=[^a-zA-Z0-9])" + words[i] + "$", cencoredWord);
 			}
 		}
 		return cencoredText;
