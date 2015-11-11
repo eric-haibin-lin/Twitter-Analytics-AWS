@@ -46,7 +46,7 @@ public class HbaseHandler implements DataHandler {
       config.set("hbase.zookeeper.quorum", "localhost");
       HBaseAdmin admin = new HBaseAdmin(config);
       
-      pool = new HTablePool(config, 40);
+      pool = new HTablePool(config, 400);
       
       System.out.println("Done init HBase server");
     } catch (IOException e){
@@ -138,15 +138,15 @@ public class HbaseHandler implements DataHandler {
         int posCount = 0;
         int negCount = 0;
         for (int i = 0; i < resultList.size(); i++) {
-            if (resultList.get(i).getScore() > 0 && posCount <= n) {
+            if (resultList.get(i).getScore() > 0 && posCount < n) {
                 resString += resultList.get(i).toString();
                 posCount++;
             }
-            if (resultList.get(resultList.size() - i - 1).getScore() < 0 && negCount <= n) {
+            if (resultList.get(resultList.size() - i - 1).getScore() < 0 && negCount < n) {
                 negResString += resultList.get(resultList.size() - i - 1).toString();
                 negCount++;
             }
-            if (posCount > n && negCount > n) {
+            if (posCount >= n && negCount >= n) {
                 break;
             }
         }
