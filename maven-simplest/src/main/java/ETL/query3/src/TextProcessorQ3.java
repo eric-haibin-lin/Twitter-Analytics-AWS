@@ -117,6 +117,7 @@ public class TextProcessorQ3 {
 				cencoredText = cencoredText.replaceAll("(?<=[^a-zA-Z0-9])" + words[i] + "(?=[^a-zA-Z0-9])", cencoredWord);
 				cencoredText = cencoredText.replaceAll("^" + words[i] + "(?=[^a-zA-Z0-9])", cencoredWord);
 				cencoredText = cencoredText.replaceAll("(?<=[^a-zA-Z0-9])" + words[i] + "$", cencoredWord);
+				cencoredText = cencoredText.replaceAll("^" + words[i] + "$", cencoredWord);
 			}
 		}
 		return cencoredText;
