@@ -3,6 +3,7 @@ package io.vertx.example;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.RandomRowFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class HbaseHandler implements DataHandler {
   private static final byte[] DATA_Q4 = "d".getBytes();
   private static final byte[] RESULT_Q4 = "v".getBytes();
   
-  private static final String TABLE_NAME = "q2_32_snap_row";
+  private static final String TABLE_NAME = "q2";
   private static final String TABLE_NAME_Q4 = "q4";
   
   private static HTablePool pool;
@@ -65,7 +66,25 @@ public class HbaseHandler implements DataHandler {
 
     return null;
   }
-  
+
+  public String warmup(String query, String ratio){
+    HTableInterface table = pool.getTable(query);
+    Float probability = Float.parseFloat(ratio);
+    Scan scan = new Scan();
+    RandomRowFilter randomRowFilter = new RandomRowFilter(probability);
+    scan.setFilter(randomRowFilter);
+    try {
+      ResultScanner scanner = table.getScanner(scan);
+      for (Result res : scanner) {
+        System.out.println(res);
+      }
+      scanner.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return "";
+  }
+
   @Override
   public String getQuery4(String hashtag, Integer n){
 	    String rowKey = hashtag;

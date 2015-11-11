@@ -19,6 +19,7 @@ public class HelloWorldEmbedded {
     private static final String Q2_ENDPOINT = "/q2";
     private static final String Q3_ENDPOINT = "/q3";
     private static final String Q4_ENDPOINT = "/q4";
+    private static final String WARMUP_ENDPOINT = "/warmup";
     //private static final String PRIVATE_KEY = System.getenv("$PRIVATE_KEY");
     private static final String PRIVATE_KEY = "8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773";
 
@@ -46,8 +47,11 @@ public class HelloWorldEmbedded {
         case Q3_ENDPOINT:
           handleQ3Request(dataHandler, req);
           break;
-		case Q4_ENDPOINT:
+		    case Q4_ENDPOINT:
           handleQ4Request(dataHandler, req);
+          break;
+        case WARMUP_ENDPOINT:
+          warmup(dataHandler, req);
           break;
         default:
           req.response().end("Unrecognized endpoint");
@@ -56,7 +60,23 @@ public class HelloWorldEmbedded {
     }).listen(80);
   }
 
-    /**
+  private static void warmup(DataHandler dataHandler, HttpServerRequest req) {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        String query = req.params().get("query");
+        String ratio = req.params().get("ratio");
+        String resString = TEAM_INFO;
+        if (dataHandler instanceof HbaseHandler){
+          resString = TEAM_INFO + ((HbaseHandler) dataHandler).warmup(query, ratio);
+        }
+        req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+        req.response().end(resString);
+      }
+    });
+    t.start();
+  }
+
+  /**
    * handles query 4
    * @param dataHandler
    * @param req
