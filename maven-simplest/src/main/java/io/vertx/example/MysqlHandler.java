@@ -125,11 +125,13 @@ public class MysqlHandler implements DataHandler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String query = "SELECT r FROM q3 WHERE q BETWEEN " + qs +" AND " + qe;
+        String query = "SELECT q,r FROM q3 WHERE q BETWEEN " + qs +" AND " + qe;
         ResultSet result = sql_statement.executeQuery(query);
         List<ResultQ3> resultList = new ArrayList<ResultQ3>();
 
         while (result.next()) {
+            String s = result.getString("q");
+            String dateString = s.substring(s.length() - 6, s.length() - 1);
             Blob b = result.getBlob("r");
             long l = b.length();
             byte[] bytes = b.getBytes(1, (int) l);
@@ -139,7 +141,8 @@ public class MysqlHandler implements DataHandler {
             for (String res : resStringArr) {
                 //System.out.println(res);
                 String[] elem = res.split(",");
-                resultList.add(new ResultQ3(Integer.parseInt(elem[0]), elem[1], elem[2]));
+                resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
+                                            elem[1], elem[2]));
             }
         }
         Collections.sort(resultList, new ResultQ3());

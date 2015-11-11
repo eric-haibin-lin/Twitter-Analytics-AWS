@@ -12,7 +12,7 @@ import org.json.JSONObject;
  */
 public class MySQLMapperQ3 {
     public static void main(String[] args) throws FileNotFoundException {
-        TextProcessor textProcessor = new TextProcessor();
+        TextProcessorQ3 textProcessor = new TextProcessorQ3();
         String line = null;
         String patternFrom = "EEE MMM dd HH:mm:ss +0000 yyyy";
         String patternTo = "yyMMdd";

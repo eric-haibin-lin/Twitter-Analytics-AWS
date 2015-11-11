@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class TextProcessor {
+public class TextProcessorQ3 {
 	private static HashMap<String, String> bannedWordsMap = new HashMap<String, String>();
 	private static HashMap<String, Integer> sentimentScoresMap = new HashMap<String, Integer>();
 	private static boolean bInitialized = false;
@@ -60,7 +60,7 @@ public class TextProcessor {
 		bInitialized = true;
 	}
 
-	public TextProcessor() {
+	public TextProcessorQ3() {
 		if (!bInitialized) {
 			Init();
 		}

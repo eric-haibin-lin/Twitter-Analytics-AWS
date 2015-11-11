@@ -8,6 +8,17 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONObject;
 import java.io.IOException;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.text.ParseException;
+
+import java.math.BigInteger;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Arrays;
+
 
 public class HbaseHandler implements DataHandler {
 
@@ -18,6 +29,7 @@ public class HbaseHandler implements DataHandler {
   private static final byte[] RESULT_Q4 = "v".getBytes();
   
   private static final String TABLE_NAME = "q2";
+  private static final String TABLE_NAME_Q3 = "q3";
   private static final String TABLE_NAME_Q4 = "q4";
   
   private static HTablePool pool;
@@ -64,7 +76,75 @@ public class HbaseHandler implements DataHandler {
 
   public String getQuery3(String userId, String startDate,
                           String endDate, String number) {
-    return null;
+    String resString = "";
+    int n = Integer.parseInt(number);
+    try {
+        HTableInterface tweetTable = pool.getTable(TABLE_NAME_Q3);
+
+        String patternFrom = "yyyy-MM-dd";
+        String patternTo = "yyMMdd";
+        SimpleDateFormat formatterFrom = new SimpleDateFormat(patternFrom);
+        SimpleDateFormat formatterTo = new SimpleDateFormat(patternTo);
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        String qs = "";
+        String qe = "";
+        try {
+            cal1.setTime(formatterFrom.parse(startDate));
+            cal2.setTime(formatterFrom.parse(endDate));
+            qs = userId + formatterTo.format(cal1.getTime());
+            qe = userId + formatterTo.format(cal2.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //creating a scan object with start and stop row keys
+        Scan scan = new Scan(Bytes.toBytes(qs),Bytes.toBytes(qe));        
+        ResultScanner scanner = tweetTable.getScanner(scan);
+
+        List<ResultQ3> resultList = new ArrayList<ResultQ3>();
+        for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
+        {
+            String key = Bytes.toString(rowResult.getRow());
+            String dateString = key.substring(key.length() - 6, key.length() - 1);
+
+            String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
+            pool.putTable(tweetTable);
+
+            String[] resStringArr = record.split("\b");
+            for (String res : resStringArr) {
+                //System.out.println(res);
+                String[] elem = res.split(",");
+                resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
+                                            elem[1], elem[2]));
+            }
+        }
+        Collections.sort(resultList, new ResultQ3());
+
+        resString += "Positive Tweets\n";
+        String negResString = "Negative Tweets\n";
+        int posCount = 0;
+        int negCount = 0;
+        for (int i = 0; i < resultList.size(); i++) {
+            if (resultList.get(i).getScore() > 0 && posCount <= n) {
+                resString += resultList.get(i).toString();
+                posCount++;
+            }
+            if (resultList.get(resultList.size() - i - 1).getScore() < 0 && negCount <= n) {
+                negResString += resultList.get(resultList.size() - i - 1).toString();
+                negCount++;
+            }
+            if (posCount > n && negCount > n) {
+                break;
+            }
+        }
+
+        resString += "\n" + negResString;
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return resString;
   }
 
   public String warmup(String query, String ratio){

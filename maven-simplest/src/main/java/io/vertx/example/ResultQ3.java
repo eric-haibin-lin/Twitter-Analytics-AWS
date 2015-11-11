@@ -5,11 +5,13 @@ import java.util.Comparator;
 
 
 public class ResultQ3 implements Comparator<ResultQ3> {
+    private String date;
     private int score;
 	private String tid;
 	private String content;
 	
-	public ResultQ3(int score, String tid, String content){
+	public ResultQ3(String date, int score, String tid, String content){
+        this.date = date;
         this.score = score;
 		this.tid = tid;
 		this.content = content;
@@ -32,7 +34,7 @@ public class ResultQ3 implements Comparator<ResultQ3> {
 	}
 
   public String toString(){
-    return score + "," + tid + "," + content + "\n";
+    return date + "," + score + "," + tid + "," + content + "\n";
   }
 
 }
