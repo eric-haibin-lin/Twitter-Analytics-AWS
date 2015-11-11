@@ -3,6 +3,8 @@ package io.vertx.example;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.*;
+import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.InclusiveStopFilter;
 import org.apache.hadoop.hbase.filter.RandomRowFilter;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.json.JSONObject;
@@ -97,9 +99,11 @@ public class HbaseHandler implements DataHandler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        //creating a scan object with start and stop row keys
-        Scan scan = new Scan(Bytes.toBytes(qs),Bytes.toBytes(qe));        
+        //System.out.println(qs + "  -  " + qe);
+        //creating a scan object with start and stop row keys (inclusive)
+        InclusiveStopFilter filter = new InclusiveStopFilter(Bytes.toBytes(qe));
+        Scan scan = new Scan(Bytes.toBytes(qs));
+        scan.setFilter(filter);
         ResultScanner scanner = tweetTable.getScanner(scan);
 
         List<ResultQ3> resultList = new ArrayList<ResultQ3>();
@@ -107,25 +111,26 @@ public class HbaseHandler implements DataHandler {
         {
             try {
                 String key = Bytes.toString(rowResult.getRow());
+                System.out.println(key);
                 String dateString = key.substring(key.length() - 6, key.length());
                 Calendar tempCal = Calendar.getInstance();
                 tempCal.setTime(formatterTo.parse(dateString));
                 dateString = formatterFrom.format(tempCal.getTime());
 
                 String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
-                pool.putTable(tweetTable);
 
                 String[] resStringArr = record.split("\b");
                 for (String res : resStringArr) {
                     //System.out.println(res);
                     String[] elem = res.split(",");
                     resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
-                                                elem[1], res));
+                                                elem[1], res.replace("\\n", "\n")));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
+        pool.putTable(tweetTable);
         Collections.sort(resultList, new ResultQ3());
 
         resString += "Positive Tweets\n";
@@ -145,7 +150,6 @@ public class HbaseHandler implements DataHandler {
                 break;
             }
         }
-
         resString += "\n" + negResString;
 
     } catch (IOException e) {
