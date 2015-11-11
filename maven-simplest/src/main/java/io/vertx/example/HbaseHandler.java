@@ -105,18 +105,25 @@ public class HbaseHandler implements DataHandler {
         List<ResultQ3> resultList = new ArrayList<ResultQ3>();
         for (Result rowResult = scanner.next(); rowResult != null; rowResult = scanner.next())
         {
-            String key = Bytes.toString(rowResult.getRow());
-            String dateString = key.substring(key.length() - 6, key.length() - 1);
+            try {
+                String key = Bytes.toString(rowResult.getRow());
+                String dateString = key.substring(key.length() - 6, key.length() - 1);
+                Calendar tempCal = Calendar.getInstance();
+                tempCal.setTime(formatterTo.parse(dateString));
+                dateString = formatterFrom.format(tempCal.getTime());
 
-            String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
-            pool.putTable(tweetTable);
+                String record = new String(rowResult.getValue(DATA, RESULT), "UTF-8");
+                pool.putTable(tweetTable);
 
-            String[] resStringArr = record.split("\b");
-            for (String res : resStringArr) {
-                //System.out.println(res);
-                String[] elem = res.split(",");
-                resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
-                                            elem[1], elem[2]));
+                String[] resStringArr = record.split("\b");
+                for (String res : resStringArr) {
+                    //System.out.println(res);
+                    String[] elem = res.split(",");
+                    resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
+                                                elem[1], elem[2]));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
         Collections.sort(resultList, new ResultQ3());

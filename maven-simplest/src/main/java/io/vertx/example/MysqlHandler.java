@@ -130,19 +130,26 @@ public class MysqlHandler implements DataHandler {
         List<ResultQ3> resultList = new ArrayList<ResultQ3>();
 
         while (result.next()) {
-            String s = result.getString("q");
-            String dateString = s.substring(s.length() - 6, s.length() - 1);
-            Blob b = result.getBlob("r");
-            long l = b.length();
-            byte[] bytes = b.getBytes(1, (int) l);
-            String blobString = new String(bytes);
-            blobString = blobString.substring(0, blobString.length() - 1);
-            String[] resStringArr = blobString.split("\b");
-            for (String res : resStringArr) {
-                //System.out.println(res);
-                String[] elem = res.split(",");
-                resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
-                                            elem[1], elem[2]));
+            try {
+                String s = result.getString("q");
+                String dateString = s.substring(s.length() - 6, s.length() - 1);
+                Calendar tempCal = Calendar.getInstance();
+                tempCal.setTime(formatterTo.parse(dateString));
+                dateString = formatterFrom.format(tempCal.getTime());
+                Blob b = result.getBlob("r");
+                long l = b.length();
+                byte[] bytes = b.getBytes(1, (int) l);
+                String blobString = new String(bytes);
+                blobString = blobString.substring(0, blobString.length() - 1);
+                String[] resStringArr = blobString.split("\b");
+                for (String res : resStringArr) {
+                    //System.out.println(res);
+                    String[] elem = res.split(",");
+                    resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
+                                                elem[1], elem[2]));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
         Collections.sort(resultList, new ResultQ3());
