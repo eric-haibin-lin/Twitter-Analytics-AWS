@@ -7,7 +7,7 @@ import java.util.*;
  * This is the reducer for MySQL data
  * @author Yifan
  */
-public class HBaseReducer {
+public class Q2HBaseReducer {
 
 	public static void main(String[] args) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -16,6 +16,7 @@ public class HBaseReducer {
 		List<String> idList = new ArrayList<String>();
 		String prevKey = "";
 		try {
+      //TODO fix logic error for first line
 			while((line = bufferedReader.readLine()) != null){
 				try{
 					String[] fields = line.split("\t");

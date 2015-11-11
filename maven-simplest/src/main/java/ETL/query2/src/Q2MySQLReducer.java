@@ -8,7 +8,7 @@ import org.json.JSONObject;
  * This is the reducer for MySQL data
  * @author Yifan
  */
-public class MySQLReducer {
+public class Q2MySQLReducer {
 
 	public static void main(String[] args) {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));

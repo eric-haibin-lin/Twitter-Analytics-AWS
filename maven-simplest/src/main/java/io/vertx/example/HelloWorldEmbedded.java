@@ -14,11 +14,15 @@ public class HelloWorldEmbedded {
     private static final String MYSQL_MODE = "Mysql";
     private static final String USER_ID = "userid";
     private static final String TWEET_TIME = "tweet_time";
+    private static final String START_DATE = "start_date";
+    private static final String END_DATE = "end_date";
+    private static final String NUMBER = "n";
     private static final String TEAM_INFO = "Coding Squirrels,9327-7717-4260\n";
     private static final String Q1_ENDPOINT = "/q1";
     private static final String Q2_ENDPOINT = "/q2";
     private static final String Q3_ENDPOINT = "/q3";
     private static final String Q4_ENDPOINT = "/q4";
+    private static final String WARMUP_ENDPOINT = "/warmup";
     //private static final String PRIVATE_KEY = System.getenv("$PRIVATE_KEY");
     private static final String PRIVATE_KEY = "8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773";
 
@@ -46,6 +50,12 @@ public class HelloWorldEmbedded {
         case Q3_ENDPOINT:
           handleQ3Request(dataHandler, req);
           break;
+		    case Q4_ENDPOINT:
+          handleQ4Request(dataHandler, req);
+          break;
+        case WARMUP_ENDPOINT:
+          warmup(dataHandler, req);
+          break;
         default:
           req.response().end("Unrecognized endpoint");
           break;
@@ -53,13 +63,74 @@ public class HelloWorldEmbedded {
     }).listen(80);
   }
 
+  private static void warmup(DataHandler dataHandler, HttpServerRequest req) {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        String query = req.params().get("query");
+        String ratio = req.params().get("ratio");
+        String resString = TEAM_INFO;
+        if (dataHandler instanceof HbaseHandler){
+          resString = TEAM_INFO + ((HbaseHandler) dataHandler).warmup(query, ratio);
+        }
+        req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+        req.response().end(resString);
+      }
+    });
+    t.start();
+  }
+
+  /**
+   * handles query 4
+   * @param dataHandler
+   * @param req
+   */
+  private static void handleQ4Request(DataHandler dataHandler, HttpServerRequest req) {
+    Thread t = new Thread(new Runnable() {
+        public void run() {
+            String hashtag = req.params().get("hashtag");
+            String n = req.params().get("n");
+            String resString = TEAM_INFO;
+            if (hashtag == null || n == null || 
+                hashtag.isEmpty() || n.isEmpty()) {
+              resString = "Parameters invalid!";
+            } else {
+              resString = TEAM_INFO + dataHandler.getQuery4(hashtag, Integer.parseInt(n));
+            }
+            req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+            req.response().end(resString);
+        }
+    });
+    t.start();
+  }
+  
   /**
    * handles query 3
    * @param dataHandler
    * @param req request
    */
   private static void handleQ3Request(DataHandler dataHandler, HttpServerRequest req) {
-    req.response().end("Not implemented yet");
+    Thread t = new Thread(new Runnable() {
+        public void run() {
+            String userId = req.params().get(USER_ID);
+            String startDate = req.params().get(START_DATE);
+            String endDate = req.params().get(END_DATE);
+            String number = req.params().get(NUMBER);
+            String resString = TEAM_INFO;
+            if (userId == null || startDate == null || 
+                endDate == null || number == null ||
+                userId.isEmpty() || startDate.isEmpty() || 
+                endDate.isEmpty() || number.isEmpty()) {
+              resString = "Parameters invalid!";
+            } else {
+              resString = TEAM_INFO + dataHandler.getQuery3(
+                            userId, startDate, endDate, number);
+            }
+            req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+            req.response().end(resString);
+        }
+    });
+    t.start();
+
   }
 
   /**

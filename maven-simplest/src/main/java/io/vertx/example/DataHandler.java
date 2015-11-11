@@ -5,4 +5,6 @@ package io.vertx.example;
  */
 public interface DataHandler {
   String getQuery2(String userId, String tweetTime);
+  String getQuery3(String userId, String startDate, String endDate, String number);
+  String getQuery4(String hashtag, Integer n);
 }

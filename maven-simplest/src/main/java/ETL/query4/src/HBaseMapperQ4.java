@@ -2,7 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
-public class HBaseMapper {
+public class HBaseMapperQ4 {
     public static void main(String[] args) throws FileNotFoundException {
         String line = null;
         try {

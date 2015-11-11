@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MySQLMapper {
+public class MySQLMapperQ4 {
     public static void main(String[] args) throws FileNotFoundException {
         String line = null;
         try {

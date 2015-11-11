@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MySQLReducer {
+public class MySQLReducerQ4 {
     public static void main(String[] args) throws FileNotFoundException {
         String line = null;
         BufferedReader bufferedReader = new BufferedReader(
