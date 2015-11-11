@@ -124,7 +124,7 @@ public class HbaseHandler implements DataHandler {
                     //System.out.println(res);
                     String[] elem = res.split(",");
                     resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
-                                                elem[1], res.replace("\\n", "\n")));
+                                                elem[1], res.replace("\\n", "\n").replace("\\t", "\t").replace("\\\\", "\\")));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
