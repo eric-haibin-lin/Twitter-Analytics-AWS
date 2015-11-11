@@ -12,7 +12,7 @@ public class MySQLReducerQ3 {
     public static void main(String[] args) {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         String line = null;
-        List<String> resultList = new ArrayList<String>();
+        List<ResultQ3ETL> resultList = new ArrayList<ResultQ3ETL>();
         String prevKey = "";
         try {
             //First line
@@ -25,14 +25,17 @@ public class MySQLReducerQ3 {
                         String[] fields = line.split("\t");
                         String key = fields[0];
                         String content = fields[1];
+                        String[] contentSplit = content.split(",");
                         if (key.equals(prevKey)){
-                          resultList.add(content);
+                          resultList.add(new ResultQ3ETL(
+                            Integer.parseInt(contentSplit[0]), contentSplit[1], content));
                         } else {
                             //print results for previous key (uid)
                             printResult(resultList, prevKey);
-                            resultList = new ArrayList<String>();
+                            resultList = new ArrayList<ResultQ3ETL>();
                             prevKey = key;
-                            resultList.add(content);
+                            resultList.add(new ResultQ3ETL(
+                            Integer.parseInt(contentSplit[0]), contentSplit[1], content));
                           }
                     } catch (Exception e){
                         e.printStackTrace();
@@ -46,15 +49,29 @@ public class MySQLReducerQ3 {
         }   
     }
 
-  private static void printResult(List<String> resultList, String prevKey) {
+  private static void printResult(List<ResultQ3ETL> resultList, String prevKey) {
+    Collections.sort(resultList, new ResultQ3ETL());
     StringBuilder output = new StringBuilder();
     output.append(prevKey);
     output.append("\t");
-    for (String result : resultList){
-      output.append(result + "\b");
+    int posCount = 0;
+    int negCount = 0;
+    for (int i = 0; i < resultList.size(); i++) {
+        if (resultList.get(i).getScore() > 0 && posCount < 10) {
+            output.append(resultList.get(i).toString() + "\b");
+            posCount++;
+        }
+        if (resultList.get(resultList.size() - i - 1).getScore() < 0 && negCount < 10) {
+            output.append(resultList.get(resultList.size() - i - 1).toString() + "\b");
+            negCount++;
+        }
+        if (posCount >= 10 && negCount >= 10) {
+            break;
+        }
     }
-    //output.append("\\n");
-    System.out.println(output.toString());
+    if (posCount != 0 || negCount != 0) {
+        System.out.println(output.toString());
+    }
   }
 }
 
