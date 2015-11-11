@@ -107,7 +107,7 @@ public class HbaseHandler implements DataHandler {
         {
             try {
                 String key = Bytes.toString(rowResult.getRow());
-                String dateString = key.substring(key.length() - 6, key.length() - 1);
+                String dateString = key.substring(key.length() - 6, key.length());
                 Calendar tempCal = Calendar.getInstance();
                 tempCal.setTime(formatterTo.parse(dateString));
                 dateString = formatterFrom.format(tempCal.getTime());
@@ -120,7 +120,7 @@ public class HbaseHandler implements DataHandler {
                     //System.out.println(res);
                     String[] elem = res.split(",");
                     resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
-                                                elem[1], elem[2]));
+                                                elem[1], res));
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
