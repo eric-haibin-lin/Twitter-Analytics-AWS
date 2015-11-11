@@ -11,8 +11,7 @@ else
 
     mysql --local-infile -u root -pcoding15619 -e "SET foreign_key_checks = 0;SET unique_checks = 0;SET bulk_insert_buffer_size = 1024*1024*1024;"
     echo "parameters for MySQL set"
-    mysql --local-infile -u root -pcoding15619 -e "DROP DATABASE tweet;"
-    echo "Drop tweet"
+
     mysql --local-infile -u root -pcoding15619 -e "CREATE DATABASE IF NOT EXISTS tweet;"
     echo "DATABASE tweet created"
 
