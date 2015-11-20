@@ -22,6 +22,7 @@ public class HelloWorldEmbedded {
     private static final String Q2_ENDPOINT = "/q2";
     private static final String Q3_ENDPOINT = "/q3";
     private static final String Q4_ENDPOINT = "/q4";
+    private static final String Q6_ENDPOINT = "/q6";
     private static final String WARMUP_ENDPOINT = "/warmup";
     //private static final String PRIVATE_KEY = System.getenv("$PRIVATE_KEY");
     private static final String PRIVATE_KEY = "8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773";
@@ -53,6 +54,9 @@ public class HelloWorldEmbedded {
 		    case Q4_ENDPOINT:
           handleQ4Request(dataHandler, req);
           break;
+        case Q6_ENDPOINT:
+          handleQ6Request(dataHandler, req);
+          break;
         case WARMUP_ENDPOINT:
           warmup(dataHandler, req);
           break;
@@ -78,6 +82,35 @@ public class HelloWorldEmbedded {
     });
     t.start();
   }
+
+
+  /**
+   * handles query 6
+   * @param dataHandler
+   * @param req
+   */
+  private static void handleQ6Request(DataHandler dataHandler, HttpServerRequest req) {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        String opt = req.params().get("opt");
+        String tid = req.params().get("tid");
+        String seq = req.params().get("seq");
+        String tweetid = req.params().get("tweetid");
+        String tag = req.params().get("tag");
+        String resString = TEAM_INFO;
+        if (opt == null || tid == null || seq == null || tweetid == null || tag == null || opt.isEmpty() ||
+          tid.isEmpty() || seq.isEmpty() || tweetid.isEmpty() || tag.isEmpty()) {
+          resString = "Parameters invalid!";
+        } else {
+          resString = TEAM_INFO + dataHandler.getQuery6(opt, tid, seq, tweetid, tag);
+        }
+        req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+        req.response().end(resString);
+      }
+    });
+    t.start();
+  }
+
 
   /**
    * handles query 4
