@@ -7,4 +7,5 @@ public interface DataHandler {
   String getQuery2(String userId, String tweetTime);
   String getQuery3(String userId, String startDate, String endDate, String number);
   String getQuery4(String hashtag, Integer n);
+  String getQuery6(String opt,  String tid, String seq, String tweetId, String tag);
 }

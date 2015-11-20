@@ -103,6 +103,32 @@ public class MysqlHandler implements DataHandler {
 	}
 
   @Override
+  public String getQuery6(String opt, String tid, String seq, String tweetId, String tag){
+    String resString = "";
+    try {
+      Connection con = ds.getConnection();
+      Statement sql_statement = con.createStatement();
+      String q = tid;
+      String query = "SELECT r FROM q6 WHERE q = '" + q +"'";
+      ResultSet result = sql_statement.executeQuery(query);
+
+      if (result.next()) {
+        Blob b = result.getBlob("r");
+        long l = b.length();
+        byte[] bytes = b.getBytes(1, (int) l);
+        resString = new String(bytes);
+      }
+
+      if (result != null) result.close();
+      if(sql_statement != null) sql_statement.close();
+      if(con != null) con.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return resString;
+  }
+
+  @Override
   public String getQuery3(String userId, String startDate,
                           String endDate, String number) {
     String resString = "";
