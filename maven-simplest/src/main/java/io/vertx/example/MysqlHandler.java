@@ -108,7 +108,7 @@ public class MysqlHandler implements DataHandler {
     try {
       Connection con = ds.getConnection();
       Statement sql_statement = con.createStatement();
-      String q = tid;
+      String q = tweetId;
       String query = "SELECT r FROM q6 WHERE q = '" + q +"'";
       ResultSet result = sql_statement.executeQuery(query);
 
@@ -228,7 +228,7 @@ public class MysqlHandler implements DataHandler {
         ResultSet result = sql_statement.executeQuery(query);
 
         if (result.next()) {
-            
+
             Blob b = result.getBlob("r");
             long l = b.length();
             byte[] bytes = b.getBytes(1, (int) l);
