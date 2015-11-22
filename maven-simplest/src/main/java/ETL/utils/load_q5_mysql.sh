@@ -3,7 +3,7 @@ if [ "$#" != "1" ]; then
     echo "Please specify file number!"
 else
     echo "Downloading..."
-    aws s3 cp --recursive s3://haibinprivatebucket/ETL/query5/outputs/full_mysql/ ./q5_data/
+    aws s3 cp --recursive s3://haibinprivatebucket/ETL/query5/outputs/full_mysql_final/ ./q5_data/
 
     echo "loading data into MySQL..."
     load_times=$1
