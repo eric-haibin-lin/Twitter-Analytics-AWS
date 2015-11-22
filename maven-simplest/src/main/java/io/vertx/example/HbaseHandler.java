@@ -59,7 +59,7 @@ public class HbaseHandler implements DataHandler {
   }
 
   @Override
-  public String getQuery5(Integer uid_min, Integer uid_max) {
+  public String getQuery5(String uid_min, String uid_max) {
 	return "";
   }
   @Override

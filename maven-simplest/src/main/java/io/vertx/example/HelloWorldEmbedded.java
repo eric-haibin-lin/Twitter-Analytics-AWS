@@ -129,7 +129,7 @@ public class HelloWorldEmbedded {
         if (userid_min == null || userid_max == null || userid_min.isEmpty() || userid_max.isEmpty()) {
           resString = "Parameters invalid!";
         } else {
-          resString = TEAM_INFO + dataHandler.getQuery5(Integer.parseInt(userid_min), Integer.parseInt(userid_max));
+          resString = TEAM_INFO + dataHandler.getQuery5(userid_min, userid_max);
         }
         req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
         req.response().end(resString);
