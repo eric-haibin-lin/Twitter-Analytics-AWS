@@ -22,6 +22,7 @@ public class HelloWorldEmbedded {
     private static final String Q2_ENDPOINT = "/q2";
     private static final String Q3_ENDPOINT = "/q3";
     private static final String Q4_ENDPOINT = "/q4";
+	private static final String Q5_ENDPOINT = "/q5";
     private static final String Q6_ENDPOINT = "/q6";
     private static final String WARMUP_ENDPOINT = "/warmup";
     //private static final String PRIVATE_KEY = System.getenv("$PRIVATE_KEY");
@@ -51,8 +52,11 @@ public class HelloWorldEmbedded {
         case Q3_ENDPOINT:
           handleQ3Request(dataHandler, req);
           break;
-		    case Q4_ENDPOINT:
+		case Q4_ENDPOINT:
           handleQ4Request(dataHandler, req);
+          break;
+		case Q5_ENDPOINT:
+          handleQ5Request(dataHandler, req);
           break;
         case Q6_ENDPOINT:
           handleQ6Request(dataHandler, req);
@@ -103,6 +107,29 @@ public class HelloWorldEmbedded {
           resString = "Parameters invalid!";
         } else {
           resString = TEAM_INFO + dataHandler.getQuery6(opt, tid, seq, tweetid, tag);
+        }
+        req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
+        req.response().end(resString);
+      }
+    });
+    t.start();
+  }
+  
+    /**
+   * handles query 5
+   * @param dataHandler
+   * @param req
+   */
+  private static void handleQ5Request(DataHandler dataHandler, HttpServerRequest req) {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        String userid_min = req.params().get("userid_min");
+        String userid_max = req.params().get("userid_max");
+        String resString = TEAM_INFO;
+        if (userid_min == null || userid_max == null || userid_min.isEmpty() || userid_max.isEmpty()) {
+          resString = "Parameters invalid!";
+        } else {
+          resString = TEAM_INFO + dataHandler.getQuery5(Integer.parseInt(userid_min), Integer.parseInt(userid_max));
         }
         req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
         req.response().end(resString);

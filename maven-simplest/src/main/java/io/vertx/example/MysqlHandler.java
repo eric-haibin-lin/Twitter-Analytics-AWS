@@ -101,6 +101,33 @@ public class MysqlHandler implements DataHandler {
 		}
 		return resString;
 	}
+	
+	@Override
+	public String getQuery5(Integer uid_min, Integer uid_max) {
+		String resString = "";
+		try {
+			Connection con = ds.getConnection();
+
+			Statement sql_statement = con.createStatement();
+			String query = "SELECT SUM(count) FROM q5 WHERE uid >= " + uid_min + " AND uid <= " + uid_max;
+			ResultSet result = sql_statement.executeQuery(query);
+
+			if (result.next()) {
+				resString += result.getInt(0);
+			}
+
+			if (result != null)
+				result.close();
+			if (sql_statement != null)
+				sql_statement.close();
+			if (con != null)
+				con.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resString;
+	}
 
   @Override
   public String getQuery6(String opt, String tid, String seq, String tweetId, String tag){
@@ -171,7 +198,6 @@ public class MysqlHandler implements DataHandler {
                 blobString = blobString.substring(0, blobString.length() - 1);
                 String[] resStringArr = blobString.split("\b");
                 for (String res : resStringArr) {
-                    //System.out.println(res);
                     String[] elem = res.split(",");
                     try {
                         resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 

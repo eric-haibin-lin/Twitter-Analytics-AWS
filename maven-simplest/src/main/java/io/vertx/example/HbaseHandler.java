@@ -59,6 +59,10 @@ public class HbaseHandler implements DataHandler {
   }
 
   @Override
+  public String getQuery5(Integer uid_min, Integer uid_max) {
+	return "";
+  }
+  @Override
   public String getQuery2(String userId, String tweetTime) {
     String rowKey = userId + "_" + tweetTime;
     String result = "";
@@ -99,8 +103,7 @@ public class HbaseHandler implements DataHandler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        //System.out.println(qs + "  -  " + qe);
-        //creating a scan object with start and stop row keys (inclusive)
+
         InclusiveStopFilter filter = new InclusiveStopFilter(Bytes.toBytes(qe));
         Scan scan = new Scan(Bytes.toBytes(qs));
         scan.setFilter(filter);
@@ -121,7 +124,6 @@ public class HbaseHandler implements DataHandler {
 
                 String[] resStringArr = record.split("\b");
                 for (String res : resStringArr) {
-                    //System.out.println(res);
                     String[] elem = res.split(",");
                     resultList.add(new ResultQ3(dateString, Integer.parseInt(elem[0]), 
                                                 elem[1], res.replace("\\n", "\n").replace("\\t", "\t").replace("\\\\", "\\")));
