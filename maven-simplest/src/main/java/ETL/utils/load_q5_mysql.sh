@@ -14,7 +14,7 @@ else
     mysql --local-infile -u root -pcoding15619 -e "CREATE DATABASE IF NOT EXISTS tweet;"
     echo "DATABASE tweet created"
 
-    mysql --local-infile -u root -pcoding15619 tweet -e "CREATE TABLE IF NOT EXISTS q5 (uid int NOT NULL, count int NOT NULL,PRIMARY KEY (uid)) ENGINE = MYISAM;"
+    mysql --local-infile -u root -pcoding15619 tweet -e "CREATE TABLE IF NOT EXISTS q5 (uid bigint NOT NULL, count bigint NOT NULL,PRIMARY KEY (uid)) ENGINE = MYISAM;"
     echo "TABLE q5 created"
 
     prefix="part-000"

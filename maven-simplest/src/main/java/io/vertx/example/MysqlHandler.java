@@ -105,15 +105,31 @@ public class MysqlHandler implements DataHandler {
 	@Override
 	public String getQuery5(String uid_min, String uid_max) {
 		String resString = "";
+		Integer count1=0, count2=0;
+		if (Long.parseLong(uid_min) > Long.parseLong(uid_max)) {
+			return "0";
+		}
 		try {
 			Connection con = ds.getConnection();
 
 			Statement sql_statement = con.createStatement();
-			String query = "SELECT SUM(count) FROM q5 WHERE uid >= " + uid_min + " AND uid <= " + uid_max;
+			String query = "SELECT count FROM q5 WHERE uid = (SELECT MAX(uid) FROM q5 WHERE uid < "+uid_min+")"+
+			"union select count from q5 where uid = (SELECT MAX(uid) FROM q5 WHERE uid <= "+uid_max+")";
 			ResultSet result = sql_statement.executeQuery(query);
 
 			if (result.next()) {
-				resString += result.getInt(1);
+				count1 = result.getInt(1);
+				if (result.next()) {
+					count2 = result.getInt(1);
+					Integer n = count2 - count1;
+					resString = n.toString();
+				}
+				else {
+					resString = count1.toString();
+				}
+			}
+			else {
+				resString = "0";
 			}
 
 			if (result != null)
