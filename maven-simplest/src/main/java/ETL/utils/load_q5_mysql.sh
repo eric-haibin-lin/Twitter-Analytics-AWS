@@ -3,8 +3,7 @@ if [ "$#" != "1" ]; then
     echo "Please specify file number!"
 else
     echo "Downloading..."
-    aws s3 cp --recursive s3://haibinprivatebucket/ETL/query5/outputs/full_mysql/ ./
-
+    aws s3 cp --recursive s3://haibinprivatebucket/ETL/query5/outputs/full_mysql/ ./q5_data/
 
     echo "loading data into MySQL..."
     load_times=$1
@@ -18,8 +17,6 @@ else
     mysql --local-infile -u root -pcoding15619 tweet -e "CREATE TABLE IF NOT EXISTS q5 (uid int NOT NULL, count int NOT NULL,PRIMARY KEY (uid)) ENGINE = MYISAM;"
     echo "TABLE q5 created"
 
-    mysql --local-infile -u root -pcoding15619 tweet -e ""
-
     prefix="part-000"
     for (( load_idx=0; $load_idx<=$load_times; load_idx=$load_idx+1 ))
     do
@@ -29,6 +26,7 @@ else
 	    filename=$prefix$load_idx
 	fi
 	echo "Loading $filename..."
-	mysql --local-infile -u root -pcoding15619 tweet -e "LOAD DATA LOCAL INFILE '~/q5_data/$filename' REPLACE INTO TABLE q5 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' (uid, count);"
+	mysql --local-infile -u root -pcoding15619 tweet -e "LOAD DATA LOCAL INFILE './q5_data/$filename' REPLACE INTO TABLE q5 FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' (uid, count);"
+    
     done
 fi
