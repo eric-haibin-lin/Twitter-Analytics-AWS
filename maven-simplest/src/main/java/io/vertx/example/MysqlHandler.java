@@ -113,7 +113,7 @@ public class MysqlHandler implements DataHandler {
 			ResultSet result = sql_statement.executeQuery(query);
 
 			if (result.next()) {
-				resString += result.getInt(0);
+				resString += result.getInt(1);
 			}
 
 			if (result != null)
