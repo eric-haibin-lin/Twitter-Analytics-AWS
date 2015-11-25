@@ -16,15 +16,10 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.*;
 import java.text.ParseException;
 
 import java.math.BigInteger;
-import java.util.Comparator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Arrays;
 
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
@@ -36,7 +31,11 @@ public class MysqlHandler implements DataHandler {
   private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/tweet";
 
   private static final DataSource ds = DBCPDataSourceFactory.getDataSource();
-  
+  private Map<String, Transaction> transactionMap = new HashMap<>();
+
+  private static final String END_OPT = "e";
+  private static final String READ_OPT = "r";
+
   public static class DBCPDataSourceFactory {
     public static DataSource getDataSource(){
       BasicDataSource ds = new BasicDataSource();
@@ -44,12 +43,12 @@ public class MysqlHandler implements DataHandler {
       ds.setUrl(MYSQL_URL);
       ds.setUsername(userName);
       ds.setPassword(passWord);
-
       return ds;
     }
   }
 
   public MysqlHandler() {
+    Transaction.setDataSource(ds);
   }
 
   public static Connection getConnection() {
@@ -57,9 +56,8 @@ public class MysqlHandler implements DataHandler {
     try {
         conSql = DriverManager.getConnection(MYSQL_URL, userName, passWord);
     } catch (SQLException e) {
-	e.printStackTrace();
+	    e.printStackTrace();
     }
-    
     return conSql;
   }
 
@@ -147,26 +145,25 @@ public class MysqlHandler implements DataHandler {
 
   @Override
   public String getQuery6(String opt, String tid, String seq, String tweetId, String tag){
+    Transaction transaction;
     String resString = "";
-    try {
-      Connection con = ds.getConnection();
-      Statement sql_statement = con.createStatement();
-      String q = tweetId;
-      String query = "SELECT r FROM q6 WHERE q = '" + q +"'";
-      ResultSet result = sql_statement.executeQuery(query);
+    if (!transactionMap.containsKey(tid)){
+      transaction = new Transaction();
+      transactionMap.put(tid, transaction);
+    } else {
+      transaction = transactionMap.get(tid);
+    }
 
-      if (result.next()) {
-        Blob b = result.getBlob("r");
-        long l = b.length();
-        byte[] bytes = b.getBytes(1, (int) l);
-        resString = new String(bytes);
-      }
-
-      if (result != null) result.close();
-      if(sql_statement != null) sql_statement.close();
-      if(con != null) con.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
+    if (opt.equals(READ_OPT)) {
+      resString = transaction.read(seq, tweetId);
+    } else if (opt.equals(END_OPT)){
+      transaction.end();
+      resString = "0";
+      transactionMap.remove(tid);
+    } else {
+      transaction.execute(seq, tweetId, opt, tag);
+      //return 0 for start and end opt
+      resString = tag == null ? "0" : tag;
     }
     return resString;
   }

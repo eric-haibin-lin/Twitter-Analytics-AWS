@@ -102,8 +102,8 @@ public class HelloWorldEmbedded {
         String tweetid = req.params().get("tweetid");
         String tag = req.params().get("tag");
         String resString = TEAM_INFO;
-        if (opt == null || tid == null || seq == null || tweetid == null || tag == null || opt.isEmpty() ||
-          tid.isEmpty() || seq.isEmpty() || tweetid.isEmpty() || tag.isEmpty()) {
+        //We don't need to check the value of tag since it's null for read request
+        if (opt == null || tid == null || tid.isEmpty() || opt.isEmpty()) {
           resString = "Parameters invalid!";
         } else {
           resString = TEAM_INFO + dataHandler.getQuery6(opt, tid, seq, tweetid, tag);
