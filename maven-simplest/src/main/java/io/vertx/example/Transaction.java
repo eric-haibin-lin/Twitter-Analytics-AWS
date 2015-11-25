@@ -113,8 +113,6 @@ public class Transaction {
     return resString;
   }
 
-
-
   public void execute(String seq, String tweetId, String opt, String tag) {
     synchronized (lock){
       switch (opt){

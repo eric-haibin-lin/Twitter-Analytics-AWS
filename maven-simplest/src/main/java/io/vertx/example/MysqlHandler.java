@@ -156,16 +156,17 @@ public class MysqlHandler implements DataHandler {
 
     if (opt.equals(READ_OPT)) {
       resString = transaction.read(seq, tweetId);
+      return resString;
     } else if (opt.equals(END_OPT)){
-      transaction.end();
       resString = "0";
+      transaction.end();
       transactionMap.remove(tid);
     } else {
       transaction.execute(seq, tweetId, opt, tag);
       //return 0 for start and end opt
       resString = tag == null ? "0" : tag;
     }
-    return resString;
+    return resString + "\n";
   }
 
   @Override
