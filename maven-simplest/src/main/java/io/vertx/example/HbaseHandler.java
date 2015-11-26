@@ -216,6 +216,11 @@ public class HbaseHandler implements DataHandler {
     return null;
   }
 
+  @Override
+  public String getQuery6Fast(String opt, String tid, String seq, String tweetId, String tag) {
+    return null;
+  }
+
   /**
    * get the text field from a json object
    * @param textStr the string of the json object

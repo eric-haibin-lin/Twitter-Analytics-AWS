@@ -106,7 +106,7 @@ public class HelloWorldEmbedded {
         if (opt == null || tid == null || tid.isEmpty() || opt.isEmpty()) {
           resString = "Parameters invalid!";
         } else {
-          resString = TEAM_INFO + dataHandler.getQuery6(opt, tid, seq, tweetid, tag);
+          resString = TEAM_INFO + dataHandler.getQuery6Fast(opt, tid, seq, tweetid, tag);
         }
         req.response().headers().add("Content-Type", "text/plain; charset=UTF-8");
         req.response().end(resString);

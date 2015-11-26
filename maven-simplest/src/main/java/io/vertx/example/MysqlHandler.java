@@ -20,6 +20,7 @@ import java.util.*;
 import java.text.ParseException;
 
 import java.math.BigInteger;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
@@ -32,9 +33,12 @@ public class MysqlHandler implements DataHandler {
 
   private static final DataSource ds = DBCPDataSourceFactory.getDataSource();
   private Map<String, Transaction> transactionMap = new HashMap<>();
+  private Map<String, Map<String, String>> appendMap = new ConcurrentHashMap<>();
 
   private static final String END_OPT = "e";
   private static final String READ_OPT = "r";
+  private static final String START_OPT = "s";
+  private static final String APPEND_OPT = "a";
 
   public static class DBCPDataSourceFactory {
     public static DataSource getDataSource(){
@@ -167,6 +171,79 @@ public class MysqlHandler implements DataHandler {
       resString = tag == null ? "0" : tag;
     }
     return resString + "\n";
+  }
+
+  @Override
+  public String getQuery6Fast(String opt, String tid, String seq, String tweetId, String tag) {
+    String resString = "0\n";
+    Map<String, String> map;
+    switch (opt){
+      case START_OPT:
+        if (!appendMap.containsKey(tid)){
+          appendMap.put(tid, new HashMap<>());
+        }
+        break;
+      case END_OPT:
+        appendMap.remove(tid);
+        break;
+      case READ_OPT:
+        Integer seqNum = Integer.parseInt(seq);
+        map = getAppendEntries(tid);
+        resString = getTweet(tweetId);
+        while (map.size() != seqNum - 1){
+          try {
+            Thread.sleep(100);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+        }
+        String appendTag = "";
+        if (map.containsKey(tweetId)){
+          appendTag = map.get(tweetId);
+        }
+        resString += appendTag;
+        //map.put(tweetId + "-", "");
+        break;
+      case APPEND_OPT:
+        map = getAppendEntries(tid);
+        map.put(tweetId, tag);
+        break;
+    }
+    return resString;
+  }
+
+  private Map<String, String> getAppendEntries(String tid) {
+    Map<String, String> map;
+    if (!appendMap.containsKey(tid)){
+      map = new HashMap<>();
+      appendMap.put(tid, map);
+    } else {
+      map = appendMap.get(tid);
+    }
+    return map;
+  }
+
+  private String getTweet(String tweetId) {
+    String resString = "";
+    try {
+      Connection con = ds.getConnection();
+      Statement sql_statement = con.createStatement();
+      String q = tweetId;
+      String query = "SELECT r FROM q6 WHERE q = '" + q +"'";
+      ResultSet result = sql_statement.executeQuery(query);
+      if (result.next()) {
+        Blob b = result.getBlob("r");
+        long l = b.length();
+        byte[] bytes = b.getBytes(1, (int) l);
+        resString = new String(bytes);
+      }
+      if (result != null) result.close();
+      if(sql_statement != null) sql_statement.close();
+      if(con != null) con.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return resString;
   }
 
   @Override

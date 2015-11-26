@@ -9,4 +9,5 @@ public interface DataHandler {
   String getQuery4(String hashtag, Integer n);
   String getQuery5(String userid_min, String userid_max);
   String getQuery6(String opt,  String tid, String seq, String tweetId, String tag);
+  String getQuery6Fast(String opt,  String tid, String seq, String tweetId, String tag);
 }
