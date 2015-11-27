@@ -28,12 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MysqlHandler implements DataHandler {
 
   private static final String userName = "root";
-  private static final String passWord = "coding15619";
+  private static final String passWord = "root";
   private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/tweet";
 
   private static final DataSource ds = DBCPDataSourceFactory.getDataSource();
   private Map<String, Transaction> transactionMap = new HashMap<>();
   private Map<String, Map<String, String>> appendMap = new ConcurrentHashMap<>();
+  private List<String> garbage = new ArrayList<>();
 
   private static final String END_OPT = "e";
   private static final String READ_OPT = "r";
@@ -53,6 +54,27 @@ public class MysqlHandler implements DataHandler {
 
   public MysqlHandler() {
     Transaction.setDataSource(ds);
+//    Thread t = new Thread(new Runnable() {
+//      @Override
+//      public void run() {
+//        while (true){
+//          if (garbage.size() > 0){
+//            int size = garbage.size();
+//            for (int i = 0; i < size; i++){
+//              String tid = garbage.get(0);
+//              garbage.remove(0);
+//              appendMap.remove(tid);
+//            }
+//          }
+//          try {
+//            Thread.sleep(1000);
+//          } catch (InterruptedException e) {
+//            e.printStackTrace();
+//          }
+//        }
+//      }
+//    });
+//    t.start();
   }
 
   public static Connection getConnection() {
@@ -184,15 +206,16 @@ public class MysqlHandler implements DataHandler {
         }
         break;
       case END_OPT:
-        appendMap.remove(tid);
+        //appendMap.remove(tid);
+        //garbage.add(tid);
         break;
       case READ_OPT:
         Integer seqNum = Integer.parseInt(seq);
         map = getAppendEntries(tid);
         resString = getTweet(tweetId);
-        while (map.size() != seqNum - 1){
+        if (map.size() != seqNum - 1){
           try {
-            Thread.sleep(100);
+            Thread.sleep(1);
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -201,12 +224,13 @@ public class MysqlHandler implements DataHandler {
         if (map.containsKey(tweetId)){
           appendTag = map.get(tweetId);
         }
-        resString += appendTag;
-        //map.put(tweetId + "-", "");
+        resString += "ILOVE15619!" + appendTag + "\n";
+        map.put(tweetId + "-", "");
         break;
       case APPEND_OPT:
         map = getAppendEntries(tid);
-        map.put(tweetId, tag);
+        map.put(tweetId, tag.substring(11));
+        resString = tag + "\n";
         break;
     }
     return resString;
