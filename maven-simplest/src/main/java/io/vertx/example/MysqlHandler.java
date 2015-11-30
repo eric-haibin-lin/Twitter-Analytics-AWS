@@ -206,7 +206,12 @@ public class MysqlHandler implements DataHandler {
         }
         break;
       case END_OPT:
-        //appendMap.remove(tid);
+        try {
+          Thread.sleep(1);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+        appendMap.remove(tid);
         //garbage.add(tid);
         break;
       case READ_OPT:
