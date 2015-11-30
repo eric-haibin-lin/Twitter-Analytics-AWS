@@ -223,8 +223,10 @@ public class MysqlHandler implements DataHandler {
         String appendTag = "";
         if (map.containsKey(tweetId)){
           appendTag = map.get(tweetId);
+          resString += "ILOVE15619!" + appendTag + "\n";
+        } else {
+          resString += "\n";
         }
-        resString += "ILOVE15619!" + appendTag + "\n";
         map.put(tweetId + "-", "");
         break;
       case APPEND_OPT:
