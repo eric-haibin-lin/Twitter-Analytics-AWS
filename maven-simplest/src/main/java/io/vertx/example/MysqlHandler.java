@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MysqlHandler implements DataHandler {
 
   private static final String userName = "root";
-  private static final String passWord = "root";
+  private static final String passWord = "coding15619";
   private static final String MYSQL_URL = "jdbc:mysql://localhost:3306/tweet";
 
   private static final DataSource ds = DBCPDataSourceFactory.getDataSource();
