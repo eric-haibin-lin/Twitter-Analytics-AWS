@@ -26,7 +26,6 @@ public class HelloWorldEmbedded {
     private static final String Q6_ENDPOINT = "/q6";
     private static final String WARMUP_ENDPOINT = "/warmup";
     private static final String PRIVATE_KEY = System.getenv("PRIVATE_KEY");
-    private static final String PRIVATE_KEY = "8271997208960872478735181815578166723519929177896558845922250595511921395049126920528021164569045773";
 
   public static void main(String[] args) {
 
