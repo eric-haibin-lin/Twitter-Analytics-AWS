@@ -1,21 +1,21 @@
-# README #
+# Twitter Analytics on the Cloud #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+The team project of course 15-619 at CMU. By Team CodingSquirrels: Haibin Lin, Aaron Chen and Hechao Li.
 
-### CodingSquirrels ###
+### Challenges ###
 
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Implement Extract Transform and Load (ETL) on a large data set (~ 1 TB) and load into MySQL and HBase systems.
+* Design and optimize MySQL and HBase databases to deal with scale and improve throughput.
+* Explore and utilize various methods and tools to improve the performance of a complete web service.
+* Develop consistent servers to handle write queries, range queries and read queries.
 
-### How do I get set up? ###
+### Tech Stack ###
 
-* 可能需要安装JDK 8和Maven,详情看我们team project的documentation: 
-* https://docs.google.com/document/d/1N-7QncKD4usLpmaaRgq02tL0FiJFjOhnZyCD2d5UaJ0
+* Extract and transform with AWS Elastic MapReduce
+* Load balance web traffic with AWS Elastic Load Balancer and Nginx proxy server
+* Handle web request with Vert.x web server
+* Load data with MySQL and Apache HBase  
 
-### About pdc ###
-* secret key x 保存在环境变量SECRETKEY中，需要配置环境变量
-* 实现了加密和解密
+### Architecture ###
 
-
-### Contribution guidelines ###
-
-* Writing tests!
+<img src="submit/resources/archi.png" width="540px" height="360px" />
