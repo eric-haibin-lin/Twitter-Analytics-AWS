@@ -18,4 +18,4 @@ The team project of course 15-619 at CMU. By Team CodingSquirrels: Haibin Lin, A
 
 ### Architecture ###
 
-<img src="submit/resources/archi.png" width="540px" height="360px" />
+<img src="maven-simplest/submit/resources/archi.png" width="540px" height="360px" />
